@@ -1,11 +1,13 @@
 const user = require('../Models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 exports.signUp = async (req, res) => {
     try {
         const { userName, name, email, password, dateOfBirth } = req.body;
 
-        const findUser = await user.findOne({email});
+        const findUser = await user.findOne({ email });
 
         if (findUser) {
             return res.status(400).json({
@@ -15,10 +17,10 @@ exports.signUp = async (req, res) => {
         }
 
         let hashedPassword
-        try{
+        try {
             hashedPassword = await bcrypt.hash(password, 10)
         }
-        catch(e){
+        catch (e) {
             return res.status(400).json({
                 success: false,
                 message: 'Something went wrong'
@@ -29,13 +31,74 @@ exports.signUp = async (req, res) => {
             userName, name, email, password: hashedPassword, dateOfBirth
         })
 
-        newUser.password = undefined;
-        newUser.id = undefined;
+        const data = {
+            userName: newUser.userName,
+            email: newUser.email
+        }
         res.status(200).json({
             success: true,
-            data: newUser,
+            data: data,
             message: 'user created successfully'
         })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong. Please try again later!!'
+        })
+    }
+}
+
+exports.logIn = async (req, res) => {
+    try {
+        const { userName, password, email } = req.body;
+
+        const User = await user.findOne({ userName }) || await user.findOne({ email });
+
+        if (!User) {
+            return res.status(400).json({
+                success: 'false',
+                message: 'Some thing went wrong'
+            })
+        }
+
+        const compare = await bcrypt.compare(password, User.password);
+
+        if (!compare) {
+            return res.status(400).json({
+                success: 'false',
+                message: 'Incorrect password'
+            })
+        }
+
+        const payload = {
+            email: user.email,
+            id: user.id,
+        }
+
+        let token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: 3600,
+        });
+
+        user.token = token;
+
+        const options = {
+            expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+            httpOnly: true,
+        }
+
+        const data = {
+            userName: User.userName,
+            email: User.email
+        }
+
+        res.cookie("token", token, options).status(200).json({
+            success: true,
+            token,
+            data,
+            message: 'logged in successfully'
+        });
     }
     catch (e) {
         console.log(e);

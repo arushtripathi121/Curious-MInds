@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mailSender = require('../Config/mailSender');
 
 const userSchema = new mongoose.Schema({
     userName: {
@@ -32,6 +33,17 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required:true,
         default:Date.now(),
+    }
+})
+
+userSchema.post("save", async function(doc){
+    try{
+        console.log("Doc", doc);
+        const info = await mailSender(doc);
+        console.log(info);
+    }
+    catch(e){
+        console.log(e);
     }
 })
 
