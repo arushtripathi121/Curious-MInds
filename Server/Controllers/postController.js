@@ -36,9 +36,10 @@ exports.createPost = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
     try {
-        const { postId } = req.params;
+        const  postId  = req.params.id;
+        console.log(postId);
 
-        const post = await Post.findById(postId);
+        const post = await Post.findById({_id: postId});
 
         if(!post) {
             return res.Status(400).json({
@@ -51,7 +52,7 @@ exports.deletePost = async (req, res) => {
 
         await Post.findByIdAndDelete(postId);
 
-        await User.findByIdAndDelete(userId, {$pull: {posts: postId}});
+        await User.findByIdAndUpdate(userId, {$pull: {posts: postId}});
 
         res.status(200).json(
             {
