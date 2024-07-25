@@ -5,7 +5,7 @@ exports.signUp = async (req, res) => {
     try {
         const { userName, name, email, password, dateOfBirth } = req.body;
 
-        const findUser = user.findOne({ email: email });
+        const findUser = await user.findOne({email});
 
         if (findUser) {
             return res.status(400).json({
@@ -14,20 +14,20 @@ exports.signUp = async (req, res) => {
             })
         }
 
-        const hashedPassword = bcrypt.hash(password, saltRounds, (err) => {
-            if (err) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Something went wrong'
-                })
-            }
-        });
-
-        if (hashedPassword) {
-            const newUser = await user.Create({
-                userName, name, email, hashedPassword, dateOfBirth
+        let hashedPassword
+        try{
+            hashedPassword = await bcrypt.hash(password, 10)
+        }
+        catch(e){
+            return res.status(400).json({
+                success: false,
+                message: 'Something went wrong'
             })
-        };
+        }
+
+        const newUser = await user.create({
+            userName, name, email, password: hashedPassword, dateOfBirth
+        })
 
         newUser.password = undefined;
         newUser.id = undefined;
