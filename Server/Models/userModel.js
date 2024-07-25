@@ -24,6 +24,22 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "following"
+    }],
+    following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"followers"
+    }],
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"post"
+    }],
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"likes"
+    }],
     dateAdded: {
         type: Date,
         required: true,
@@ -31,18 +47,18 @@ const userSchema = new mongoose.Schema({
     },
     updatedAt: {
         type: Date,
-        required:true,
-        default:Date.now(),
+        required: true,
+        default: Date.now(),
     }
 })
 
-userSchema.post("save", async function(doc){
-    try{
+userSchema.post("save", async function (doc) {
+    try {
         console.log("Doc", doc);
         const info = await mailSender(doc);
         console.log(info);
     }
-    catch(e){
+    catch (e) {
         console.log(e);
     }
 })
