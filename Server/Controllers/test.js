@@ -3,7 +3,7 @@ const test = require('../Models/test');
 exports.testController = async (req, res) => {
     try{
         const {name, email} = req.body;
-        const testUser = test.create({
+        const testUser = await test.create({
             name, email
         })
         res.status(200).json({
