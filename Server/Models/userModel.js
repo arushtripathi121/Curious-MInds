@@ -24,13 +24,19 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    role: {
+        type: String,
+        required: true,
+        enum: ['Admin', 'User'],
+        default: 'User',
+    },
     followers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "following"
+        ref: 'user'
     }],
     following: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"followers"
+        ref: 'user'
     }],
     posts: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -38,7 +44,11 @@ const userSchema = new mongoose.Schema({
     }],
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"likes"
+        ref:"like"
+    }],
+    comments: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"comment"
     }],
     dateAdded: {
         type: Date,
