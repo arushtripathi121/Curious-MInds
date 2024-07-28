@@ -1,32 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaHeart, FaComment, FaCalendarAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux'
 
 const PostCard = ({ Post }) => {
 
     const User = useSelector(store => store.user.user);
-    const [likePost, setLikePost] = useState(false);
 
     const checkLike = async (post, user) => {
-        const data = await fetch ('http://localhost:5000/Curious_Minds/api/v1/user/likePost', {
+        const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/likePost', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({post, user})
+            body: JSON.stringify({ post, user })
         })
         const message = await data.json();
         console.log(message.message);
     }
 
-    const onHandleLike = () => {
+    const checkDislike = async (id) => {
+        const data = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/dislikePost/${id}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+        })
+        const message = await data.json();
+        console.log(message.message);
+    }
+
+    const onHandleLike =() => {
         const userHasLiked = Post.likes.find(like => like.user._id === User._id);
         console.log(userHasLiked);
         const post = Post._id;
-        const user= User.User._id;
-        console.log(post , user);
-        if(!userHasLiked) {
-            checkLike(post , user);
+        const user = User.User._id;
+        console.log(post, user);
+        if (!userHasLiked) {
+            const data = checkLike(post, user);
+        }
+        else if (userHasLiked) {
+            const id = userHasLiked._id;
+            const data = checkDislike(id);
         }
     }
     return (

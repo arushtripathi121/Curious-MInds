@@ -9,7 +9,7 @@ exports.likePost = async (req, res) => {
 
         const postExists = await Post.findById({ _id: post });
         console.log(postExists);
-        const likeExist = postExists.likes.find(like => like.user.toString() === user.toString());
+        const likeExist = postExists.likes.find(like => like.user === user);
         console.log(likeExist);
         const userExists = await User.findById({ _id: user });
         if (!postExists) {
