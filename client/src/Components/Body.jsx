@@ -13,7 +13,7 @@ const Body = () => {
     const appRouter = createBrowserRouter([
         {
           path: '/',
-          element: <HomePage/>  
+          element:  <ProtectedRoute element={<MainPage />} element2={<HomePage/>}/>  
         },
         {
           path: '/signUp',
@@ -25,7 +25,7 @@ const Body = () => {
         },
         {
           path: '/main',
-          element: <ProtectedRoute element={<MainPage />} />
+          element: <ProtectedRoute element={<MainPage />}/>
         },
         {
           path: '/profile',

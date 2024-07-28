@@ -6,34 +6,34 @@ import { removeUser } from '../Utils/userSlice';
 
 const PostLoginHeader = () => {
 
-    const [show, setShow] = useState(false);
-    const onHandleClick = () => {
-        setShow(!show);
-    }
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const onHandleClick = () => {
+    setShow(!show);
+  }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const onLogout = () => {
-      dispatch(removeUser());
-      navigate('/');
-    }
+  const onLogout = () => {
+    dispatch(removeUser());
+    navigate('/');
+  }
 
-    return (
-        <div className="flex justify-between items-center bg-gray-900 px-20 py-5">
-        <p className="font-mono font-bold text-3xl text-gray-100">
-          <Link to="/">DevelopersNest</Link>
+  return (
+    <div className="flex justify-between items-center bg-white px-20 py-5 shadow-md">
+      <p className="font-mono font-bold text-3xl text-blue-600">
+        <Link to="/">DevelopersNest</Link>
+      </p>
+      <div className="relative group">
+        <p className="text-blue-600 text-2xl cursor-pointer">
+          <FaRegUser />
         </p>
-        <div className="relative group">
-          <p className="text-gray-100 text-2xl cursor-pointer">
-            <FaRegUser />
-          </p>
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-gray-800 text-gray-100 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <p className="px-4 py-2 hover:bg-gray-700 cursor-pointer"><Link to={'/profile'}>Your Profile</Link></p>
-              <p className="px-4 py-2 hover:bg-gray-700 cursor-pointer" onClick={() => onLogout()}>Log out</p>
-          </div>
+        <div className="absolute right-0 mt-2 w-48 bg-blue-100 text-blue-600 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <Link to='/profile' className="block px-4 py-2 hover:bg-blue-200 cursor-pointer">Your Profile</Link>
+          <p className="block px-4 py-2 hover:bg-blue-200 cursor-pointer" onClick={onLogout}>Log out</p>
         </div>
       </div>
-    )
+    </div>
+  )
 }
 
 export default PostLoginHeader

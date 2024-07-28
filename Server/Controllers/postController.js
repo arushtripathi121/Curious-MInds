@@ -36,12 +36,12 @@ exports.createPost = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
     try {
-        const  postId  = req.params.id;
+        const postId = req.params.id;
         console.log(postId);
 
-        const post = await Post.findById({_id: postId});
+        const post = await Post.findById({ _id: postId });
 
-        if(!post) {
+        if (!post) {
             return res.Status(400).json({
                 success: false,
                 message: 'something went wrong'
@@ -52,7 +52,7 @@ exports.deletePost = async (req, res) => {
 
         await Post.findByIdAndDelete(postId);
 
-        await User.findByIdAndUpdate(userId, {$pull: {posts: postId}});
+        await User.findByIdAndUpdate(userId, { $pull: { posts: postId } });
 
         res.status(200).json(
             {
@@ -68,5 +68,22 @@ exports.deletePost = async (req, res) => {
                 message: 'Something went wrong'
             }
         )
+    }
+}
+
+exports.getPost = async (req, res) => {
+    try {
+        const { user } = req.body;
+        const posts = await Post.find({user}).populate("comments").populate("likes").exec();
+        res.json({
+            posts,
+        })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(400).json({
+            success: false,
+            message: 'Something went wrong'
+        })
     }
 }
