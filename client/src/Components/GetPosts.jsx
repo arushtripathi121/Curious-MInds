@@ -9,7 +9,7 @@ const GetPosts = ({ user }) => {
     <div className='flex flex-col gap-10'>
       {posts && posts
         .sort((a, b) => new Date(b.date) - new Date(a.date))
-        .map((post) => <PostCard post={post} key={post._id} />)}
+        .map((post) => <PostCard Post={post} key={post._id} />)}
     </div>
   )
 }

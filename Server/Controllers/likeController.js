@@ -6,26 +6,28 @@ exports.likePost = async (req, res) => {
     try {
         const { user, post } = req.body;
 
-        const ifAlreadyLiked = await Like.findOne({user});
-        const postExists = await Post.findById({_id: post});
-        const userExists = await User.findById({_id: user});
 
-        if(!postExists){
+        const postExists = await Post.findById({ _id: post });
+        console.log(postExists);
+        const likeExist = postExists.likes.find(like => like.user.toString() === user.toString());
+        console.log(likeExist);
+        const userExists = await User.findById({ _id: user });
+        if (!postExists) {
             return res.status(400).json({
                 success: false,
                 message: 'Post does not exists'
             })
         }
 
-        
-        if(!userExists){
+
+        if (!userExists) {
             return res.status(400).json({
                 success: false,
                 message: 'User does not exists'
             })
         }
 
-        if(ifAlreadyLiked){
+        if (likeExist) {
             return res.status(400).json({
                 success: true,
                 message: 'already liked the post'
@@ -42,7 +44,7 @@ exports.likePost = async (req, res) => {
         res.status(200).json(
             {
                 success: true,
-                message: 'Posted successfully'
+                message: 'Liked successfully'
             }
         )
     }
@@ -62,12 +64,12 @@ exports.likePost = async (req, res) => {
 
 exports.dislikePost = async (req, res) => {
     try {
-        const  likeId  = req.params.id;
+        const likeId = req.params.id;
         console.log(likeId);
 
-        const dislike = await Like.findById({_id: likeId});
+        const dislike = await Like.findById({ _id: likeId });
 
-        if(!dislike) {
+        if (!dislike) {
             return res.Status(400).json({
                 success: false,
                 message: 'something went wrong'
@@ -79,8 +81,8 @@ exports.dislikePost = async (req, res) => {
 
         await Like.findByIdAndDelete(likeId);
 
-        await User.findByIdAndUpdate(userId, {$pull: {likes: likeId}});
-        await Post.findByIdAndUpdate(postId, {$pull: {likes: likeId}});
+        await User.findByIdAndUpdate(userId, { $pull: { likes: likeId } });
+        await Post.findByIdAndUpdate(postId, { $pull: { likes: likeId } });
 
         res.status(200).json(
             {
