@@ -6,6 +6,7 @@ require('dotenv').config();
 exports.signUp = async (req, res) => {
     try {
         const { userName, name, email, password, dateOfBirth } = req.body;
+        console.log(userName, name, email, password, dateOfBirth);
 
         const findUser = await user.findOne({ email });
 
@@ -23,7 +24,7 @@ exports.signUp = async (req, res) => {
         catch (e) {
             return res.status(400).json({
                 success: false,
-                message: 'Something went wrong'
+                message: 'password hashing failed'
             })
         }
 
@@ -89,15 +90,10 @@ exports.logIn = async (req, res) => {
             httpOnly: true,
         }
 
-        const data = {
-            userName: User.userName,
-            email: User.email
-        }
-
         res.cookie("token", token, options).status(200).json({
             success: true,
             token,
-            data,
+            User,
             message: 'logged in successfully'
         });
     }
