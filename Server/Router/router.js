@@ -7,7 +7,7 @@ const { signUp, logIn } = require("../Controllers/userController");
 
 const { createPost, deletePost, getPost } = require("../Controllers/postController");
 
-const { likePost, dislikePost } = require("../Controllers/likeController");
+const { likePost, dislikePost, getLikes } = require("../Controllers/likeController");
 
 const { commentPost, deleteComment } = require("../Controllers/commentController");
 
@@ -25,6 +25,7 @@ router.post('/user/deletePost/:id', deletePost);
 router.post('/user/getPost', getPost);
 
 router.post('/user/likePost', likePost);
+router.post('/user/getLikes', getLikes);
 router.post('/user/dislikePost/:id', dislikePost);
 
 router.post('/user/commentPost', commentPost);

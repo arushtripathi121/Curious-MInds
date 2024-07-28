@@ -100,3 +100,24 @@ exports.dislikePost = async (req, res) => {
         )
     }
 }
+
+exports.getLikes = async (req, res) => {
+    try {
+        const { postId } = req.body;
+        const likes = await Like.find({post: postId}).populate("user").exec();
+        const userLikes = likes.map(like => ({
+            name: like.user.name,
+            userName: like.user.userName
+        }));
+        res.json(
+            userLikes
+        )
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(400).json({
+            success: false,
+            message: 'Something went wrong'
+        })
+    }
+}

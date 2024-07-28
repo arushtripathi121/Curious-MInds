@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { FaHeart, FaComment, FaCalendarAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux'
+import LikeCard from './LikeCard';
 
 const PostCard = ({ Post }) => {
 
     const User = useSelector(store => store.user.user);
-
+    const [likeCard, showLikeCard] = useState(false);
     const checkLike = async (post, user) => {
         const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/likePost', {
             method: 'POST',
@@ -29,18 +30,22 @@ const PostCard = ({ Post }) => {
         console.log(message.message);
     }
 
-    const onHandleLike =() => {
+    const handleLikeCard = () => {
+        showLikeCard(!likeCard);
+    }
+
+    const onHandleLike = async () => {
         const userHasLiked = Post.likes.find(like => like.user._id === User._id);
         console.log(userHasLiked);
         const post = Post._id;
         const user = User.User._id;
         console.log(post, user);
         if (!userHasLiked) {
-            const data = checkLike(post, user);
+            const data = await checkLike(post, user);
         }
         else if (userHasLiked) {
             const id = userHasLiked._id;
-            const data = checkDislike(id);
+            const data = await checkDislike(id);
         }
     }
     return (
@@ -48,6 +53,7 @@ const PostCard = ({ Post }) => {
             <div className='post-body mb-4 border border-b-black pb-5'>
                 <p className='text-xl font-semibold text-justify'>{Post.body}</p>
             </div>
+            <div className='cursor-pointer' onClick={() => handleLikeCard()}>Liked by{likeCard && <div><LikeCard post={Post}/></div>}</div>
             <div className='post-footer flex flex-row gap-6 justify-around text-gray-500 border-t border-gray-200 pt-4'>
                 <button className='flex items-center gap-2 cursor-pointer' onClick={() => onHandleLike()}>
                     <FaHeart className='h-5 w-5 text-red-500' />
