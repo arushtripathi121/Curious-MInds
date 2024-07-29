@@ -28,7 +28,7 @@ export const checkLike = async (post, user) => {
         body: JSON.stringify({ post, user })
     })
     const message = await data.json();
-    console.log(message.message);
+    return message.message;
 }
 
 export const checkDislike = async (id) => {
@@ -39,7 +39,6 @@ export const checkDislike = async (id) => {
         },
     })
     const message = await data.json();
-    console.log(message.message);
+    return message.message;
 }
-
 export default FetchLikes;

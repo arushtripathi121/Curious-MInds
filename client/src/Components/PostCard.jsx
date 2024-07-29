@@ -8,6 +8,8 @@ const PostCard = ({ Post }) => {
     const User = useSelector(store => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
+    const [message, setMessage ] = useState('');
+    const [showPopup, setShowPopup] = useState(false);
     const handleLikeCard = () => {
         showLikeCard(!likeCard);
     };
@@ -32,24 +34,41 @@ const PostCard = ({ Post }) => {
 
     const onHandleLike = async () => {
         const userHasLiked = likes.find((like) => like.userName === User.User.userName);
-        console.log(userHasLiked);
         const post = Post._id;
         const user = User.User._id;
         if (!userHasLiked) {
-            await checkLike(post, user);
+            const message = await checkLike(post, user);
+            setMessage(message);
+            setShowPopup(true);
         } else {
             const id = userHasLiked._id;
-            console.log(id);
-            await checkDislike(id);
+            const message = await checkDislike(id);
+            setMessage(message);
+            setShowPopup(true);
         }
         setLikes(fetchLikes(post));
+        console.log(message);
     };
+
+    useEffect(() => {
+        if (showPopup) {
+            const timer = setTimeout(() => {
+                setShowPopup(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [showPopup]);
 
     return (
         <div className='post-card flex flex-col border border-gray-300 bg-white text-gray-800 rounded-lg mx-auto px-6 py-4 shadow-lg max-w-2xl'>
             <div className='post-body mb-4 border border-b-black pb-5'>
                 <p className='text-xl font-semibold text-justify'>{Post.body}</p>
             </div>
+            <div>{showPopup && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 rounded-lg shadow-lg z-50 bg-black text-white text-lg">
+                    {message}
+                </div>
+            )}</div>
             <div className='cursor-pointer' onClick={() => handleLikeCard()}>Liked by{likeCard && likes && <div><LikeCard data={likes} /></div>}</div>
             <div className='post-footer flex flex-row gap-6 justify-around text-gray-500 border-t border-gray-200 pt-4'>
                 <button className='flex items-center gap-2 cursor-pointer' onClick={() => onHandleLike()}>
