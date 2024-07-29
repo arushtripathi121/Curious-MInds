@@ -50,7 +50,7 @@ const PostCard = ({ Post }) => {
             <div className='post-body mb-4 border border-b-black pb-5'>
                 <p className='text-xl font-semibold text-justify'>{Post.body}</p>
             </div>
-            <div className='cursor-pointer' onClick={() => handleLikeCard()}>Liked by{likeCard && <div><LikeCard data={Post} /></div>}</div>
+            <div className='cursor-pointer' onClick={() => handleLikeCard()}>Liked by{likeCard && likes && <div><LikeCard data={likes} /></div>}</div>
             <div className='post-footer flex flex-row gap-6 justify-around text-gray-500 border-t border-gray-200 pt-4'>
                 <button className='flex items-center gap-2 cursor-pointer' onClick={() => onHandleLike()}>
                     <FaHeart className='h-5 w-5 text-red-500' />
