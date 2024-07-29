@@ -92,8 +92,9 @@ exports.deleteComment = async (req, res) => {
 
 exports.getComments = async (req, res) => {
     try {
-        const postId = req.body.postId; // Accessing postId correctly
-        const findComments = await Comment.find({ postId }).populate("user").exec();
+        const postId = req.body;
+        console.log(postId);
+        const findComments = await Comment.find({post : postId.post }).populate("user").exec();
         const userComments = findComments.map((comment) => ({
             body: comment.body,
             user: comment.user,
@@ -101,7 +102,6 @@ exports.getComments = async (req, res) => {
         }));
 
         res.status(200).json({
-            success: true,
             userComments
         });
     }
