@@ -4,19 +4,19 @@ const Post = require('../Models/postModel');
 
 exports.commentPost = async (req, res) => {
     try {
-        const { user, post, body  } = req.body;
-        const postExists = await Post.findById({_id: post});
-        const userExists = await User.findById({_id: user});
+        const { user, post, body } = req.body;
+        const postExists = await Post.findById({ _id: post });
+        const userExists = await User.findById({ _id: user });
 
-        if(!postExists){
+        if (!postExists) {
             return res.status(400).json({
                 success: false,
                 message: 'Post does not exists'
             })
         }
 
-        
-        if(!userExists){
+
+        if (!userExists) {
             return res.status(400).json({
                 success: false,
                 message: 'User does not exists'
@@ -51,14 +51,14 @@ exports.commentPost = async (req, res) => {
 }
 
 
-exports.deleteComment= async (req, res) => {
+exports.deleteComment = async (req, res) => {
     try {
-        const  commentId  = req.params.id;
+        const commentId = req.params.id;
         console.log(commentId);
 
-        const deleteComment = await Comment.findById({_id: commentId});
+        const deleteComment = await Comment.findById({ _id: commentId });
 
-        if(!deleteComment) {
+        if (!deleteComment) {
             return res.Status(400).json({
                 success: false,
                 message: 'something went wrong'
@@ -70,8 +70,8 @@ exports.deleteComment= async (req, res) => {
 
         await Comment.findByIdAndDelete(commentId);
 
-        await User.findByIdAndUpdate(userId, {$pull: {comments: commentId}});
-        await Post.findByIdAndUpdate(postId, {$pull: {comments: commentId}});
+        await User.findByIdAndUpdate(userId, { $pull: { comments: commentId } });
+        await Post.findByIdAndUpdate(postId, { $pull: { comments: commentId } });
 
         res.status(200).json(
             {
@@ -89,3 +89,27 @@ exports.deleteComment= async (req, res) => {
         )
     }
 }
+
+exports.getComments = async (req, res) => {
+    try {
+        const postId = req.body.postId; // Accessing postId correctly
+        const findComments = await Comment.find({ postId }).populate("user").exec();
+        const userComments = findComments.map((comment) => ({
+            body: comment.body,
+            user: comment.user,
+            date: comment.date,
+        }));
+
+        res.status(200).json({
+            success: true,
+            userComments
+        });
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(400).json({
+            success: false,
+            message: 'Something went wrong'
+        });
+    }
+};

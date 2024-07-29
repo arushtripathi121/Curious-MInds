@@ -3,6 +3,7 @@ import { FaHeart, FaComment, FaCalendarAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux'
 import LikeCard from './LikeCard';
 import { checkDislike, checkLike } from '../Hooks/FetchLikes';
+import CommentCard from './CommentCard';
 
 const PostCard = ({ Post }) => {
     const User = useSelector(store => store.user.user);
@@ -10,9 +11,17 @@ const PostCard = ({ Post }) => {
     const [likes, setLikes] = useState([]);
     const [message, setMessage ] = useState('');
     const [showPopup, setShowPopup] = useState(false);
+    const [commentCard, showCommentCard] = useState(false);
     const handleLikeCard = () => {
         showLikeCard(!likeCard);
     };
+
+    const handleCommentCard = (post) => {
+        console.log(post);
+        showCommentCard(!commentCard);
+    };
+    
+    
 
     const fetchLikes = async (postId) => {
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getLikes', {
@@ -75,9 +84,9 @@ const PostCard = ({ Post }) => {
                     <FaHeart className='h-5 w-5 text-red-500' />
                     <span className='text-gray-800 font-bold'>{likes.length}</span> Like
                 </button>
-                <div className='flex items-center gap-2 cursor-pointer'>
+                <div className='flex items-center gap-2 cursor-pointer' onClick={(() => {handleCommentCard(Post._id)})}>
                     <FaComment className='h-5 w-5 text-blue-500' />
-                    <span className='text-gray-800 font-bold'>{Post.comments.length}</span> Comment
+                    <span className='text-gray-800 font-bold' >{Post.comments.length}{commentCard &&  <CommentCard post={Post._id}/>}</span> Comments
                 </div>
                 <div className='flex items-center gap-2'>
                     Dated:

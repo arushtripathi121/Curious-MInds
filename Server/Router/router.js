@@ -9,7 +9,7 @@ const { createPost, deletePost, getPost } = require("../Controllers/postControll
 
 const { likePost, dislikePost, getLikes } = require("../Controllers/likeController");
 
-const { commentPost, deleteComment } = require("../Controllers/commentController");
+const { commentPost, deleteComment, getComments } = require("../Controllers/commentController");
 
 const { follow } = require('../Controllers/followerController');
 
@@ -30,6 +30,7 @@ router.post('/user/dislikePost/:id', dislikePost);
 
 router.post('/user/commentPost', commentPost);
 router.post('/user/deleteComment/:id', deleteComment);
+router.post('/user/getComments', getComments);
 
 router.post('/user/follow/:id', follow);
 
