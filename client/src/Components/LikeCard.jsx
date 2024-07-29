@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
-import FetchLikes from '../Hooks/FetchLikes';
 
-const LikeCard = ({ post }) => {
-    console.log(post._id);
-    const data = FetchLikes(post._id);
+const LikeCard = ({ data }) => {
+    // const data = FetchLikes(post._id);
     console.log(data);
     return (
         <div className='fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50'>

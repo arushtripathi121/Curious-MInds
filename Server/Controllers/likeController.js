@@ -66,7 +66,6 @@ exports.dislikePost = async (req, res) => {
     try {
         const likeId = req.params.id;
         console.log(likeId);
-
         const dislike = await Like.findById({ _id: likeId });
 
         if (!dislike) {
@@ -107,7 +106,8 @@ exports.getLikes = async (req, res) => {
         const likes = await Like.find({post: postId}).populate("user").exec();
         const userLikes = likes.map(like => ({
             name: like.user.name,
-            userName: like.user.userName
+            userName: like.user.userName,
+            _id: like._id
         }));
         res.json(
             userLikes
