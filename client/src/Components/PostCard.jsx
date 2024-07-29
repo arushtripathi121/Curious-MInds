@@ -13,33 +13,14 @@ const PostCard = ({ Post }) => {
     const [message, setMessage ] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const [commentCard, showCommentCard] = useState(false);
-    const [comments, setComments] = useState([]);
     const handleLikeCard = () => {
         showLikeCard(!likeCard);
     };
 
     const handleCommentCard = async (post) => {
         showCommentCard(!commentCard);
-        console.log(post);
-        if(commentCard != true) {
-            const data = await getComments(post);
-            setComments(data);
-            console.log(data);
-        }
     };
     
-    
-    const getComments = async (post) => {
-        const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getComments', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({post})
-        })
-        const message = await data.json();
-        return message.userComments;
-    }
 
     const fetchLikes = async (postId) => {
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getLikes', {
@@ -104,7 +85,7 @@ const PostCard = ({ Post }) => {
                 </button>
                 <div className='flex items-center gap-2 cursor-pointer' onClick={(() => {handleCommentCard(Post._id)})}>
                     <FaComment className='h-5 w-5 text-blue-500' />
-                    <span className='text-gray-800 font-bold' >{Post.comments.length}{commentCard &&  <CommentCard data={comments}/>}</span> Comments
+                    <span className='text-gray-800 font-bold' >{Post.comments.length}{commentCard &&  <CommentCard data={Post._id}/>}</span> Comments
                 </div>
                 <div className='flex items-center gap-2'>
                     Dated:
