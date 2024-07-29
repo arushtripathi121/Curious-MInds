@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 const CommentCard = ({ data }) => {
     const post = data;
+    console.log(post);
     const [comments, setComments] = useState([]);
 
     const getComments = async (post) => {
@@ -35,11 +36,16 @@ const CommentCard = ({ data }) => {
                 ) : (
                     <p className='p-4 text-center'>No Comments found</p>
                 )}
-                <input
-                    type='text'
-                    placeholder='Enter your comment'
-                    className='w-full border-2 border-black p-2 mt-4'
-                />
+                <div className='p-4 border-t border-gray-200'>
+                    <input
+                        type='text'
+                        placeholder='Enter your comment'
+                        className='w-full border-2 border-black p-2'
+                    />
+                    <button className='mt-2 px-4 py-2 bg-blue-500 text-white rounded'>
+                        Submit
+                    </button>
+                </div>
             </div>
         </div>
     );
