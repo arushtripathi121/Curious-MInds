@@ -21,6 +21,7 @@ const CommentCard = ({ data, onClose, user }) => {
     };
 
     const createComments = async (user, post, body) => {
+        onClose();
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/commentPost', {
             method: 'POST',
             headers: {
@@ -29,10 +30,10 @@ const CommentCard = ({ data, onClose, user }) => {
             body: JSON.stringify({ user, post, body })
         });
         const message = await response.json();
-        onClose();
     };
 
     const deleteComment = async (id) => {
+        onClose();
         console.log('comments->', id);
         const response = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/deleteComment/${id}`, {
             method: 'POST',
@@ -41,7 +42,6 @@ const CommentCard = ({ data, onClose, user }) => {
             }
         });
         const message = await response.json();
-        onClose();
     }
 
     const onHandleChange = (e) => {
@@ -66,20 +66,27 @@ const CommentCard = ({ data, onClose, user }) => {
                 <div className='h-[80vh] overflow-y-auto p-6'>
                     {comments.length > 0 ? (
                         comments.map((user) => (
-                            <div onClick={() => deleteComment()}>
-                                <div key={user._id} className='mb-4 p-4 bg-gray-50 rounded-lg shadow-sm'>
+                            <div key={user._id} className='flex justify-between items-center mb-4 p-4 bg-gray-50 rounded-lg shadow-sm'>
+                                <div>
                                     <p className='font-semibold text-lg mb-1'>{user.body}</p>
                                     <p className='text-gray-600'>@{user.user.userName}</p>
                                 </div>
-                                <div onClick={() => deleteComment(user.id)}>
-                                    <MdDeleteOutline />
-                                </div>
+                                <button
+                                    onClick={() => deleteComment(user.id)}
+                                    className='relative text-red-600 hover:text-red-800 focus:outline-none'
+                                >
+                                    <MdDeleteOutline className='text-2xl' />
+                                    <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
+                                        Delete
+                                    </span>
+                                </button>
                             </div>
                         ))
                     ) : (
                         <p className='text-center text-gray-500'>No Comments found</p>
                     )}
                 </div>
+
                 <form className='p-4 border-t border-gray-200 bg-gray-100 flex items-center' onSubmit={(e) => e.preventDefault()}>
                     <input
                         type='text'
