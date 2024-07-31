@@ -5,6 +5,7 @@ const Post = require('../Models/postModel');
 exports.commentPost = async (req, res) => {
     try {
         const { user, post, body } = req.body;
+        console.log(user, " ", post, " ", body);
         const postExists = await Post.findById({ _id: post });
         const userExists = await User.findById({ _id: user });
 
@@ -97,6 +98,7 @@ exports.getComments = async (req, res) => {
         const id = postId.post;
         const findComments = await Comment.find({ post: id }).populate("user").exec();
         const userComments = findComments.map((comment) => ({
+            id: comment._id,
             body: comment.body,
             user: comment.user,
             date: comment.date,

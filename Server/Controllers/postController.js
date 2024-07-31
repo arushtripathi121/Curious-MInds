@@ -74,6 +74,7 @@ exports.deletePost = async (req, res) => {
 exports.getPost = async (req, res) => {
     try {
         const { user } = req.body;
+        console.log(user);
         const posts = await Post.find({user}).populate("comments").populate("likes").exec();
         res.json({
             posts,

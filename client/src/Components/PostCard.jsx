@@ -5,27 +5,28 @@ import LikeCard from './LikeCard';
 import { checkDislike, checkLike } from '../Hooks/FetchLikes';
 import CommentCard from './CommentCard';
 
-
 const PostCard = ({ Post }) => {
     const User = useSelector(store => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
     const [message, setMessage] = useState('');
     const [showPopup, setShowPopup] = useState(false);
-    
+    const [commentCard, setCommentCard] = useState(false);
+    const [inProcess, setInprocess] = useState(false);
     const handleLikeCard = () => {
         showLikeCard(!likeCard);
-    };
+    }
 
-    const [commentCard, setCommentCard] = useState(false);
+    const onHandleComment = () => {
+        setCommentCard(true);
+        console.log('Open');
+    }
 
-    const handleCommentCard = (postId) => {
-        setCommentCard(!commentCard);
-    };
+    const onHandleCloseComment = () => {
+        setCommentCard(false);
+        console.log('Close');
+    }
 
-    const handleCloseCommentCard = () => {
-        setCommentCard(commentCard);
-    };
 
     const fetchLikes = async (postId) => {
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getLikes', {
@@ -46,6 +47,7 @@ const PostCard = ({ Post }) => {
 
 
     const onHandleLike = async () => {
+        setInprocess(!inProcess);
         const userHasLiked = likes.find((like) => like.userName === User.User.userName);
         const post = Post._id;
         const user = User.User._id;
@@ -53,11 +55,13 @@ const PostCard = ({ Post }) => {
             const message = await checkLike(post, user);
             setMessage(message);
             setShowPopup(true);
+            setInprocess(false);
         } else {
             const id = userHasLiked._id;
             const message = await checkDislike(id);
             setMessage(message);
             setShowPopup(true);
+            setInprocess(false);
         }
         setLikes(fetchLikes(post));
         console.log(message);
@@ -94,24 +98,28 @@ const PostCard = ({ Post }) => {
             </div>
 
             <div className='post-footer flex flex-row gap-6 justify-between text-gray-500 border-t border-gray-200 pt-4'>
-                <button
+                {!inProcess && <button
                     className='flex items-center gap-2 cursor-pointer hover:text-red-600'
                     onClick={onHandleLike}
                 >
                     <FaHeart className='h-5 w-5 text-red-500' />
                     <span className='text-gray-800 font-bold'>{likes.length}</span> Like
                 </button>
+                }
+
 
                 <div
                     className='flex items-center gap-2 cursor-pointer hover:text-blue-600'
-                    onClick={handleCommentCard}
+
                 >
                     <FaComment className='h-5 w-5 text-blue-500' />
-                    <span className='text-gray-800 font-bold'>
+                    <span className='text-gray-800 font-bold flex flex-row gap-1'>
                         {Post.comments.length}
-                        {commentCard && <CommentCard data={Post._id} onClose={handleCloseCommentCard} />}
-                    </span> Comments
+                        {commentCard && <CommentCard data={Post._id} onClose={onHandleCloseComment} user={User.User._id} />}
+                        <button onClick={() => onHandleComment()}>Comments</button>
+                    </span>
                 </div>
+
 
                 <div className='flex items-center gap-2 text-gray-600'>
                     <FaCalendarAlt className='h-5 w-5 text-green-500' />
