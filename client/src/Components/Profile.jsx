@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PostLoginHeader from './PostLoginHeader'
 import { useSelector } from 'react-redux'
 import GetPosts from './GetPosts';
-import { FaUser, FaThumbsUp, FaUsers, FaUserFriends } from 'react-icons/fa';
+import { MdOutlineAddComment } from "react-icons/md";
+import CreatePost from './CreatePost';
 
 const Profile = () => {
 
     const user = useSelector(store => store.user.user);
     const { User } = user;
-    const { userName, name, followers, following, posts} = User;
+    const { userName, name, followers, following, posts } = User;
+    const [createPost, setCreatePost] = useState(false);
+
+    const onHandlePost = () => {
+        setCreatePost(true)
+    }
+
+    const onCloseHandlePost = () => {
+        setCreatePost(false);
+    }
     return (
         <div className="container mx-auto p-4">
             <PostLoginHeader />
@@ -39,9 +49,19 @@ const Profile = () => {
             </div>
 
             <div className='flex flex-col mt-8'>
-                <p className='text-center text-blue-600 font-semibold text-2xl'>Posts</p>
-                <div className='mt-5'><GetPosts user={user.User._id} /></div>
+                <div>
+                    <p className='text-center text-blue-600 font-semibold text-2xl'>Posts</p>
+                    <div className='mt-5'><GetPosts user={user.User._id} /></div>
+                </div>
+
+                <div className='fixed bottom-10 right-10 flex items-center space-x-4 p-4 bg-white rounded-lg shadow-lg'>
+                    {createPost && <CreatePost onClose={onCloseHandlePost} user={User._id} />}
+                    <MdOutlineAddComment className='text-5xl text-blue-600 hover:text-blue-700 transition duration-300 ease-in-out cursor-pointer' title="Write post" onClick={onHandlePost} />
+                </div>
             </div>
+
+
+
         </div>
     )
 }

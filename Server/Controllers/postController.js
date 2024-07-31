@@ -3,7 +3,9 @@ const Post = require('../Models/postModel');
 
 exports.createPost = async (req, res) => {
     try {
+        
         const { user, body } = req.body;
+        console.log(user, " " ,body);
         const post = new Post({
             user, body
         })

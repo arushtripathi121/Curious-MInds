@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import LikeCard from './LikeCard';
 import { checkDislike, checkLike } from '../Hooks/FetchLikes';
 import CommentCard from './CommentCard';
+import { MdDeleteOutline } from 'react-icons/md';
 
 const PostCard = ({ Post }) => {
     const User = useSelector(store => store.user.user);
@@ -39,6 +40,19 @@ const PostCard = ({ Post }) => {
         const data = await response.json();
         setLikes(data);
         return data;
+    };
+
+    const deletePost = async (postId) => {
+        console.log('called');
+        const response = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/deletePost/${postId}`, {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ postId })
+        });
+        const data = await response.json();
+        setLikes(data);
     };
 
     useEffect(() => {
@@ -77,8 +91,8 @@ const PostCard = ({ Post }) => {
     }, [showPopup]);
 
     return (
-        <div className='post-card flex flex-col border border-gray-300 bg-white text-gray-800 rounded-lg mx-auto px-6 py-4 shadow-lg max-w-2xl'>
-            <div className='post-body mb-4 border-b border-gray-300 pb-5'>
+        <div className='post-card flex flex-col border border-gray-300 bg-white text-gray-800 rounded-lg mx-auto px-6 py-4 shadow-lg max-w-2xl w-full'>
+            <div className='post-body mb-4 border-b border-gray-300 pb-5 overflow-hidden'>
                 <p className='text-xl font-semibold text-justify'>{Post.body}</p>
             </div>
 
@@ -107,11 +121,7 @@ const PostCard = ({ Post }) => {
                 </button>
                 }
 
-
-                <div
-                    className='flex items-center gap-2 cursor-pointer hover:text-blue-600'
-
-                >
+                <div className='flex items-center gap-2 cursor-pointer hover:text-blue-600'>
                     <FaComment className='h-5 w-5 text-blue-500' />
                     <span className='text-gray-800 font-bold flex flex-row gap-1'>
                         {Post.comments.length}
@@ -120,13 +130,22 @@ const PostCard = ({ Post }) => {
                     </span>
                 </div>
 
-
                 <div className='flex items-center gap-2 text-gray-600'>
                     <FaCalendarAlt className='h-5 w-5 text-green-500' />
                     {new Date(Post.date).toLocaleDateString()}
                 </div>
+
+                <div>
+                    <button className='relative text-red-600 hover:text-red-800 focus:outline-none'>
+                        <MdDeleteOutline className='text-2xl' onClick={() => deletePost(Post._id)} />
+                        <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
+                            Delete
+                        </span>
+                    </button>
+                </div>
             </div>
         </div>
+
     )
 }
 
