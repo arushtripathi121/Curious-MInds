@@ -18,6 +18,7 @@ const CommentCard = ({ data, onClose, user }) => {
         });
         const message = await response.json();
         setComments(message.userComments);
+        console.log(comments);
     };
 
     const createComments = async (user, post, body) => {
@@ -65,21 +66,21 @@ const CommentCard = ({ data, onClose, user }) => {
                 </button>
                 <div className='h-[80vh] overflow-y-auto p-6'>
                     {comments.length > 0 ? (
-                        comments.map((user) => (
-                            <div key={user._id} className='flex justify-between items-center mb-4 p-4 bg-gray-50 rounded-lg shadow-sm'>
+                        comments.map((comment) => (
+                            <div key={comment._id} className='flex justify-between items-center mb-4 p-4 bg-gray-50 rounded-lg shadow-sm'>
                                 <div>
-                                    <p className='font-semibold text-lg mb-1'>{user.body}</p>
-                                    <p className='text-gray-600'>@{user.user.userName}</p>
+                                    <p className='font-semibold text-lg mb-1'>{comment.body}</p>
+                                    <p className='text-gray-600'>@{comment.user.userName}</p>
                                 </div>
-                                <button
-                                    onClick={() => deleteComment(user.id)}
+                                {comment.user._id == user &&  <button
+                                    onClick={() => deleteComment(comment.id)}
                                     className='relative text-red-600 hover:text-red-800 focus:outline-none'
                                 >
                                     <MdDeleteOutline className='text-2xl' />
                                     <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
                                         Delete
                                     </span>
-                                </button>
+                                </button>}
                             </div>
                         ))
                     ) : (

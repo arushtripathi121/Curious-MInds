@@ -90,3 +90,20 @@ exports.getPost = async (req, res) => {
         })
     }
 }
+
+
+exports.getAllPost = async (req, res) => {
+    try {
+        const posts = await Post.find().populate("comments").populate("likes").exec();
+        res.json({
+            posts,
+        })
+    }
+    catch (e) {
+        console.log(e);
+        return res.status(400).json({
+            success: false,
+            message: 'Something went wrong'
+        })
+    }
+}

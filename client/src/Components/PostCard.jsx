@@ -7,6 +7,7 @@ import CommentCard from './CommentCard';
 import { MdDeleteOutline } from 'react-icons/md';
 
 const PostCard = ({ Post }) => {
+    console.log(Post);
     const User = useSelector(store => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
@@ -136,12 +137,12 @@ const PostCard = ({ Post }) => {
                 </div>
 
                 <div>
-                    <button className='relative text-red-600 hover:text-red-800 focus:outline-none'>
+                    {User.User._id == Post.user && <button className='relative text-red-600 hover:text-red-800 focus:outline-none'>
                         <MdDeleteOutline className='text-2xl' onClick={() => deletePost(Post._id)} />
                         <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
                             Delete
                         </span>
-                    </button>
+                    </button>}
                 </div>
             </div>
         </div>
