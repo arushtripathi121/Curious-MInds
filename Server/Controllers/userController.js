@@ -105,3 +105,36 @@ exports.logIn = async (req, res) => {
         })
     }
 }
+
+
+exports.getUserById = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        console.log(userId);
+        
+        const userData = await user.findById({ _id: userId });
+
+        if (!userData) {
+            res.status(400).json(
+                {
+                    success: false,
+                    message: 'No user found'
+                }
+            )
+        }
+
+        res.status(200).json({
+            success: true,
+            user: userData
+        })
+    }
+    catch (e) {
+        console.log(e);
+        res.status(400).json(
+            {
+                success: false,
+                message: 'Something went wrong'
+            }
+        )
+    }
+}

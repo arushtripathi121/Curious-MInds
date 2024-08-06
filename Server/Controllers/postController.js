@@ -4,13 +4,11 @@ const Post = require('../Models/postModel');
 exports.createPost = async (req, res) => {
     try {
         
-        const { user, body } = req.body;
-        console.log(user, " " ,body);
+        const { user, body, userName } = req.body;
+        console.log(user, " " ,body, " ", userName);
         const post = new Post({
-            user, body
+            user, body, userName
         })
-
-        console.log(user);
         const savedPost = await post.save();
 
 
@@ -76,8 +74,8 @@ exports.deletePost = async (req, res) => {
 exports.getPost = async (req, res) => {
     try {
         const { user } = req.body;
-        console.log(user);
-        const posts = await Post.find({user}).populate("comments").populate("likes").exec();
+        console.log('user-> ',user);
+        const posts = await Post.find({user}).populate("comments").populate("likes").populate("user").exec();
         res.json({
             posts,
         })

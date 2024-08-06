@@ -32,6 +32,10 @@ const Body = () => {
           element: <ProtectedRoute element={<Profile />} />
         },
         {
+          path: '/profile/:id',
+          element:<Profile/>
+        },
+        {
           path: '/error',
           element: <ErrorPage/>
         }

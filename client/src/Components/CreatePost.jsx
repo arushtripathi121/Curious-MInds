@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
 
-const CreatePost = ({ onClose, user }) => {
+const CreatePost = ({ onClose, user, userName }) => {
     const [body, setBody] = useState('');
-
+    console.log("userName -> ", userName);
+    
     const handleChange = (e) => {
         setBody(e.target.value);
     };
 
-    const createPost = async (user, body) => {
-        // No need for regex validation if we're just preserving formatting
+    const createPost = async (user, body, userName) => {
         try {
             const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/createPost', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ user, body })
+                body: JSON.stringify({ user, body, userName })
             });
 
             const message = await response.json();
@@ -47,7 +47,7 @@ const CreatePost = ({ onClose, user }) => {
                     </div>
                     <button
                         type='submit'
-                        onClick={() => createPost(user, body)}
+                        onClick={() => createPost(user, body, userName)}
                         disabled={!body.trim()}
                         className={`self-end px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out focus:outline-none ${body.trim() ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-200 cursor-not-allowed'
                             }`}

@@ -5,8 +5,10 @@ import LikeCard from './LikeCard';
 import { checkDislike, checkLike } from '../Hooks/FetchLikes';
 import CommentCard from './CommentCard';
 import { MdDeleteOutline } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const PostCard = ({ Post }) => {
+    
     const User = useSelector((store) => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
@@ -112,8 +114,14 @@ const PostCard = ({ Post }) => {
 
     return (
         <div className='post-card flex flex-col border border-gray-300 bg-white text-gray-800 rounded-lg mx-auto px-6 py-4 shadow-lg max-w-2xl w-full'>
-            <div className='post-body mb-4 border-b border-gray-300 pb-5 overflow-hidden'>
-                <p className='text-xl font-semibold text-justify' dangerouslySetInnerHTML={{ __html: formatContent(Post.body) }} />
+            <div className='flex items-center mb-4'>
+                <Link to={`/profile/${Post.user._id || Post.user}`} className='font-bold text-lg text-blue-600 hover:underline'>
+                    {Post.userName}
+                </Link>
+            </div>
+
+            <div className='post-body mb-4 border-b border-gray-300 pb-5'>
+                <p className='text-xl font-semibold' dangerouslySetInnerHTML={{ __html: formatContent(Post.body) }} />
             </div>
 
             {showPopup && (
@@ -125,7 +133,7 @@ const PostCard = ({ Post }) => {
             <div className='cursor-pointer' onClick={handleLikeCard}>
                 Liked by
                 {likeCard && likes.length > 0 && (
-                    <div>
+                    <div className='mt-2'>
                         <LikeCard data={likes} />
                     </div>
                 )}
@@ -144,10 +152,12 @@ const PostCard = ({ Post }) => {
 
                 <div className='flex items-center gap-2 cursor-pointer hover:text-blue-600'>
                     <FaComment className='h-5 w-5 text-blue-500' />
-                    <span className='text-gray-800 font-bold flex flex-row gap-1'>
+                    <span className='text-gray-800 font-bold flex items-center gap-1'>
                         {Post.comments.length}
                         {commentCard && <CommentCard data={Post._id} onClose={onHandleCloseComment} user={User.User._id} />}
-                        <button onClick={onHandleComment}>Comments</button>
+                        <button onClick={onHandleComment} className='ml-2 text-blue-600 hover:underline'>
+                            Comments
+                        </button>
                     </span>
                 </div>
 
@@ -157,17 +167,15 @@ const PostCard = ({ Post }) => {
                 </div>
 
                 {User.User._id === Post.user && (
-                    <div>
-                        <button
-                            className='relative text-red-600 hover:text-red-800 focus:outline-none'
-                            onClick={() => deletePost(Post._id)}
-                        >
-                            <MdDeleteOutline className='text-2xl' />
-                            <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
-                                Delete
-                            </span>
-                        </button>
-                    </div>
+                    <button
+                        className='relative text-red-600 hover:text-red-800 focus:outline-none'
+                        onClick={() => deletePost(Post._id)}
+                    >
+                        <MdDeleteOutline className='text-2xl' />
+                        <span className='absolute -top-8 left-1/2 transform -translate-x-1/2 px-2 py-1 text-xs bg-gray-700 text-white rounded opacity-0 hover:opacity-100 transition-opacity'>
+                            Delete
+                        </span>
+                    </button>
                 )}
             </div>
         </div>

@@ -3,7 +3,7 @@ import GetAllPostUser from '../Hooks/GetAllPostUser';
 import PostCard from './PostCard';
 
 const GetPosts = ({ user }) => {
-
+  
   const posts = GetAllPostUser(user);
   return (
     <div className='flex flex-col gap-10'>

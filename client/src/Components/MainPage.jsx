@@ -17,6 +17,8 @@ const MainPage = () => {
     setPost(data.posts);
   };
 
+  console.log(post);
+  
   useEffect(() => {
     GetAllPost();
   }, []);
