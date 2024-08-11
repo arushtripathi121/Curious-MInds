@@ -1,5 +1,6 @@
 const User = require('../Models/userModel');
 const Post = require('../Models/postModel');
+const Follower = require('../Models/followerModel')
 
 exports.createPost = async (req, res) => {
     try {

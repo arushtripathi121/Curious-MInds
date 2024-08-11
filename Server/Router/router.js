@@ -11,7 +11,7 @@ const { likePost, dislikePost, getLikes } = require("../Controllers/likeControll
 
 const { commentPost, deleteComment, getComments } = require("../Controllers/commentController");
 
-const { follow } = require('../Controllers/followerController');
+const { follow, unfollow, checkFollowStatus } = require('../Controllers/followerController');
 
 const {auth, isUser, isAdmin} = require('../Middleware/auth');
 
@@ -34,7 +34,9 @@ router.post('/user/commentPost', commentPost);
 router.post('/user/deleteComment/:id', deleteComment);
 router.post('/user/getComments', getComments);
 
-router.post('/user/follow/:id', follow);
+router.post('/user/follow', follow);
+router.post('/user/unfollow', unfollow);
+router.post('/user/checkFollowStatus', checkFollowStatus);
 
 
 router.get('/user', auth, isUser, (req, res) => {

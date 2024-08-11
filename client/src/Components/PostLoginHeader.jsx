@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaRegUser } from "react-icons/fa";
+import { FaPlus, FaRegUser } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { removeUser } from '../Utils/userSlice';
 
