@@ -138,3 +138,38 @@ exports.getUserById = async (req, res) => {
         )
     }
 }
+
+exports.getUserByName = async (req, res) => {
+    try {
+        const { details } = req.body;
+        const userData = await user.find({ details});
+    
+        if (!userData || userData.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No user found'
+            });
+        }
+    
+        let userDetails;
+        if (userData) {
+            userDetails = userData.map(user => ({
+                name: user.name,
+                id: user._id
+            }));
+        }
+    
+        res.status(200).json({
+            success: true,
+            data: userDetails
+        });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message: 'Something went wrong'
+        });
+    }
+    
+}

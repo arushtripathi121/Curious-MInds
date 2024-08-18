@@ -4,9 +4,9 @@ const Follower = require('../Models/followerModel')
 
 exports.createPost = async (req, res) => {
     try {
-        
+
         const { user, body, userName } = req.body;
-        console.log(user, " " ,body, " ", userName);
+        console.log(user, " ", body, " ", userName);
         const post = new Post({
             user, body, userName
         })
@@ -75,8 +75,8 @@ exports.deletePost = async (req, res) => {
 exports.getPost = async (req, res) => {
     try {
         const { user } = req.body;
-        console.log('user-> ',user);
-        const posts = await Post.find({user}).populate("comments").populate("likes").populate("user").exec();
+        console.log('user-> ', user);
+        const posts = await Post.find({ user }).populate("comments").populate("likes").populate("user").exec();
         res.json({
             posts,
         })
@@ -90,19 +90,34 @@ exports.getPost = async (req, res) => {
     }
 }
 
-
 exports.getAllPost = async (req, res) => {
+    const { followData } = req.body;  // Assuming followData is an array of user IDs
+    console.log('following -> ', followData);
+
     try {
-        const posts = await Post.find().populate("comments").populate("likes").exec();
+        const posts = await Post.find({ user: { $in: followData } })
+            .populate("comments")
+            .populate("likes")
+            .populate("user") // Populates the user details for each post
+            .exec();
+
+        if (!posts.length) {
+            return res.status(404).json({
+                success: false,
+                message: 'No posts found for the followed users'
+            });
+        }
+
+        // Return the posts data in the response
         res.json({
+            success: true,
             posts,
-        })
-    }
-    catch (e) {
+        });
+    } catch (e) {
         console.log(e);
         return res.status(400).json({
             success: false,
             message: 'Something went wrong'
-        })
+        });
     }
 }
