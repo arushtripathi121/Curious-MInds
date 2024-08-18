@@ -46,7 +46,7 @@ const Search = () => {
                 <input
                     type="text"
                     placeholder="Search"
-                    className="w-96 outline-none px-4 py-2 text-lg text-gray-700 rounded-full placeholder-gray-500"
+                    className="w-[72svh] outline-none px-4 py-2 text-lg text-gray-700 rounded-full placeholder-gray-500"
                     onChange={(e) => onHandleChange(e)}
                 />
                 <button onClick={onHandleClose}>
@@ -55,7 +55,7 @@ const Search = () => {
             </form>
 
             {searchResults && searchResults.length > 0 && isMenuOpen &&  (
-                <div className="absolute top-14 p-4 bg-white border border-gray-300 rounded-lg shadow-md w-96 mt-2">
+                <div className="absolute top-14 p-4 bg-white border border-gray-300 rounded-lg shadow-md w-[72svh] mt-2">
                     {searchResults.map(user => (
                         <p key={user._id} className="text-lg text-gray-800 mb-2 cursor-pointer border border-b-gray-900 py-2"><Link to={`/profile/${user.id}`}>{user.name}</Link></p>
                     ))}

@@ -24,7 +24,7 @@ const PostLoginHeader = () => {
       <p className="font-mono font-bold text-4xl text-blue-600">
         <Link to="/">DevelopersNest</Link>
       </p>
-      <div className="flex-grow mr-40">
+      <div className="flex-grow mr-60">
         <Search />
       </div>
       <div className="relative group">
