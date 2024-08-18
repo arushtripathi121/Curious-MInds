@@ -111,7 +111,7 @@ exports.getUserById = async (req, res) => {
     try {
         const { userId } = req.body;
         console.log(userId);
-        
+
         const userData = await user.findById({ _id: userId });
 
         if (!userData) {
@@ -141,24 +141,36 @@ exports.getUserById = async (req, res) => {
 
 exports.getUserByName = async (req, res) => {
     try {
-        const { details } = req.body;
-        const userData = await user.find({ details});
-    
-        if (!userData || userData.length === 0) {
+        const { search } = req.body;
+
+        if(!search) {
             return res.status(400).json({
                 success: false,
                 message: 'No user found'
             });
         }
-    
+        const userData = await user.find({
+            $or: [
+                { name: { $regex: search, $options: 'i' } },
+                { userName: { $regex: search, $options: 'i' } }
+            ]
+        });
+
+        if (!userData) {
+            return res.status(400).json({
+                success: false,
+                message: 'No user found'
+            });
+        }
+
         let userDetails;
         if (userData) {
-            userDetails = userData.map(user => ({
-                name: user.name,
-                id: user._id
+            userDetails = userData.map(userData => ({
+                name: userData.name,
+                id: userData._id
             }));
         }
-    
+
         res.status(200).json({
             success: true,
             data: userDetails
@@ -171,5 +183,5 @@ exports.getUserByName = async (req, res) => {
             message: 'Something went wrong'
         });
     }
-    
+
 }
