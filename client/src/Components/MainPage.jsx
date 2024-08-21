@@ -9,7 +9,7 @@ const MainPage = () => {
   const UserData = useSelector((store) => store.user.user);
   const { User } = UserData;
   const { _id } = User;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [post, setPost] = useState([]);
 
   const followData = FetchUser(_id);

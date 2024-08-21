@@ -30,9 +30,13 @@ const Profile = () => {
             });
             const userData = await response.json();
 
+            console.log('userData -> ' + userData);
+            
             if (userData.followStatus == true) {
                 setFollowStatus(true);
                 setFollowData(userData.data);
+                console.log('FollowStatus is -> '+followStatus);
+                
             }
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -110,6 +114,13 @@ const Profile = () => {
         }
     }, [id, UserData]);
 
+    useEffect(() => {
+        if (id) {
+            console.log('id -> ' + id);
+            checkFollowStatus(UserData.User._id, id)
+        }
+    }, ['']);
+
     const onHandlePost = () => {
         setCreatePost(true);
     };
@@ -153,7 +164,7 @@ const Profile = () => {
 
                             { userId != UserData.User._id && 
                                 <div className="bg-blue-600 mt-5 w-[12svh] gap-1 text-white font-bold px-2 py-1 border-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-white">
-                                    {id == UserData.User._id ? (
+                                    {followStatus ? (
                                         <p className='flex flex-row items-center gap-1' onClick={() => unFollowUser(followData._id)}>
                                             Following
                                         </p>
