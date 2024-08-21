@@ -150,17 +150,20 @@ const Profile = () => {
                                     <p className="text-gray-700">{user.following.length}</p>
                                 </div>
                             </div>
-                            <div className="bg-blue-600 mt-5 w-[12svh] gap-1 text-white font-bold px-2 py-1 border-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-white">
-                                {followStatus && id == UserData.User._id ? (
-                                    <p className='flex flex-row items-center gap-1' onClick={() => unFollowUser(followData._id)}>
-                                        Following
-                                    </p>
-                                ) : (
-                                    <p className='flex flex-row items-center gap-1' onClick={() => followUser(UserData.User._id, id)}>
-                                        Follow<FaPlus />
-                                    </p>
-                                )}
-                            </div>
+
+                            { userId != UserData.User._id && 
+                                <div className="bg-blue-600 mt-5 w-[12svh] gap-1 text-white font-bold px-2 py-1 border-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-white">
+                                    {id == UserData.User._id ? (
+                                        <p className='flex flex-row items-center gap-1' onClick={() => unFollowUser(followData._id)}>
+                                            Following
+                                        </p>
+                                    ) : (
+                                        <p className='flex flex-row items-center gap-1' onClick={() => followUser(UserData.User._id, id)}>
+                                            Follow<FaPlus />
+                                        </p>
+                                    )}
+                                </div>
+                            }
 
                         </div>
                     </div>
@@ -183,8 +186,8 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-    )
-}
+            )
+            }
         </div >
     );
 };
