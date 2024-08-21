@@ -14,13 +14,12 @@ const Profile = () => {
     const [createPost, setCreatePost] = useState(false);
     const [followData, setFollowData] = useState({});
     const [followStatus, setFollowStatus] = useState(false);
-
-
+    const [userId, setUserId] = useState('');
 
 
     const checkFollowStatus = async (user, userFollowed) => {
         console.log(user, userFollowed);
-        
+
         try {
             const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/checkFollowStatus', {
                 method: 'POST',
@@ -43,7 +42,7 @@ const Profile = () => {
 
     const followUser = async (user, userFollowed) => {
         console.log(user, userFollowed);
-        
+
         try {
             const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/follow', {
                 method: 'POST',
@@ -54,10 +53,10 @@ const Profile = () => {
             });
             const userData = await response.json();
             console.log(userData);
-            if(userData.success) {
+            if (userData.success) {
                 setFollowStatus(true);
             }
-            
+
         } catch (error) {
             console.error('Error fetching user data:', error);
         }
@@ -70,7 +69,7 @@ const Profile = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({followId}),
+                body: JSON.stringify({ followId }),
             });
             const userData = await response.json();
 
@@ -101,6 +100,7 @@ const Profile = () => {
 
     useEffect(() => {
         const userId = id || UserData.User._id;
+        setUserId(userId);
         if (userId) {
             fetchUserData(userId);
         }
@@ -151,7 +151,7 @@ const Profile = () => {
                                 </div>
                             </div>
                             <div className="bg-blue-600 mt-5 w-[12svh] gap-1 text-white font-bold px-2 py-1 border-2 rounded-lg cursor-pointer hover:bg-blue-700 hover:text-white">
-                                {followStatus ? (
+                                {followStatus && id == UserData.User._id ? (
                                     <p className='flex flex-row items-center gap-1' onClick={() => unFollowUser(followData._id)}>
                                         Following
                                     </p>
@@ -183,8 +183,9 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-            )}
-        </div>
+    )
+}
+        </div >
     );
 };
 

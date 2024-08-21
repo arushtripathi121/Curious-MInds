@@ -140,15 +140,14 @@ const PostCard = ({ Post }) => {
             </div>
 
             <div className='post-footer flex flex-row gap-6 justify-between text-gray-500 border-t border-gray-200 pt-4'>
-                {!inProcess && (
+                 
                     <button
                         className='flex items-center gap-2 cursor-pointer hover:text-red-600'
                         onClick={onHandleLike}
                     >
                         <FaHeart className='h-5 w-5 text-red-500' />
-                        <span className='text-gray-800 font-bold'>{likes.length}</span> Like
+                        <span className='text-gray-800 font-bold'>{!inProcess ? likes.length : ' '}</span> Like
                     </button>
-                )}
 
                 <div className='flex items-center gap-2 cursor-pointer hover:text-blue-600'>
                     <FaComment className='h-5 w-5 text-blue-500' />
