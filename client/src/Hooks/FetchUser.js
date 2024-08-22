@@ -15,6 +15,7 @@ const FetchUser = (userId) => {
         })
         const res = await data.json();
         setData(res.user.following);
+        console.log(res);
         
     }
 

@@ -108,18 +108,14 @@ const Profile = () => {
         if (userId) {
             fetchUserData(userId);
         }
-
-        if (id) {
-            checkFollowStatus(UserData.User._id, id)
-        }
-    }, [id, UserData]);
+    }, [id, UserData, followStatus]);
 
     useEffect(() => {
         if (id) {
             console.log('id -> ' + id);
             checkFollowStatus(UserData.User._id, id)
         }
-    }, ['']);
+    }, [followStatus]);
 
     const onHandlePost = () => {
         setCreatePost(true);

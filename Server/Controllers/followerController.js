@@ -25,8 +25,8 @@ exports.follow = async (req, res) => {
 
         const savedFollower = await newFollower.save();
 
-        await User.findByIdAndUpdate(user, { $push: { followers: userFollowed } }, { new: true }).populate('followers').exec();
-        await User.findByIdAndUpdate(userFollowed, { $push: { following: user } }, { new: true }).populate('following').exec();
+        await User.findByIdAndUpdate(userFollowed, { $push: { followers: user } }, { new: true }).populate('followers').exec();
+        await User.findByIdAndUpdate(user, { $push: { following: userFollowed } }, { new: true }).populate('following').exec();
         res.status(200).json({
             success: true,
             followStatus: true,
@@ -50,6 +50,8 @@ exports.checkFollowStatus = async (req, res) => {
 
         const ifAlreadyFollowed = await Follower.findOne({user:user, userFollowed: userFollowed});
 
+        console.log(ifAlreadyFollowed);
+        
         if (ifAlreadyFollowed) {
             return res.status(200).json({
                 success: true,
@@ -87,8 +89,8 @@ exports.unfollow = async (req, res) => {
         }
 
         await Follower.findByIdAndDelete(followId);
-        await User.findByIdAndUpdate(follow.user, { $pull: { followers: follow.userFollowed }});
-        await User.findByIdAndUpdate(follow.userFollowed, { $pull: { following: follow.user }});
+        await User.findByIdAndUpdate(follow.user, { $pull: { following: follow.userFollowed }});
+        await User.findByIdAndUpdate(follow.userFollowed, { $pull: { followers: follow.user }});
 
         res.status(200).json({
             success: true,
