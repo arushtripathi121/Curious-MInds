@@ -5,7 +5,7 @@ const { testController } = require("../Controllers/test");
 
 const { signUp, logIn, getUserById, getUserByName } = require("../Controllers/userController");
 
-const { createPost, deletePost, getPost, getAllPost } = require("../Controllers/postController");
+const { createPost, deletePost, getPost, getAllPost, upload } = require("../Controllers/postController");
 
 const { likePost, dislikePost, getLikes } = require("../Controllers/likeController");
 
@@ -26,6 +26,7 @@ router.post('/user/createPost', createPost);
 router.post('/user/deletePost/:id', deletePost);
 router.post('/user/getPost', getPost);
 router.post('/user/getAllPosts', getAllPost);
+router.post('/user/upload', upload);
 
 router.post('/user/likePost', likePost);
 router.post('/user/getLikes', getLikes);

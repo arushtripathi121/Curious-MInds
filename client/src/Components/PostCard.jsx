@@ -6,9 +6,9 @@ import { checkDislike, checkLike } from '../Hooks/FetchLikes';
 import CommentCard from './CommentCard';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import ImageCard from './ImageCard';
 
 const PostCard = ({ Post }) => {
-    
     const User = useSelector((store) => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
@@ -16,6 +16,7 @@ const PostCard = ({ Post }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [commentCard, setCommentCard] = useState(false);
     const [inProcess, setInprocess] = useState(false);
+    const [imageCard, setImageCard] = useState(false);
 
     const handleLikeCard = () => {
         showLikeCard(!likeCard);
@@ -28,6 +29,15 @@ const PostCard = ({ Post }) => {
     const onHandleCloseComment = () => {
         setCommentCard(false);
     };
+
+    const onHandleImageCard = () => {
+        setImageCard(true);
+    }
+
+    const onCloseImageCard = () => {
+        setImageCard(false);
+        console.log(imageCard);
+    }
 
     const fetchLikes = async (postId) => {
         try {
@@ -120,8 +130,23 @@ const PostCard = ({ Post }) => {
                 </Link>
             </div>
 
-            <div className='post-body mb-4 border-b border-gray-300 pb-5'>
+            <div className='post-body mb-4'>
                 <p className='text-xl font-semibold' dangerouslySetInnerHTML={{ __html: formatContent(Post.body) }} />
+            </div>
+            <div className="grid grid-flow-col gap-1">
+                {Post.imageUrl.slice(0, 2).map((image, index) => (
+                    <div key={index} className="w-full h-full border border-black rounded-lg" onClick={onHandleImageCard}>
+                        <img
+                            src={image}
+                            alt={`Image ${index}`}
+                            className="w-full h-full object-cover rounded-lg"
+                        />
+                    </div>
+                ))}
+
+                {imageCard &&
+                    <div><ImageCard onClose={onCloseImageCard} images={Post.imageUrl} /></div>
+                }
             </div>
 
             {showPopup && (
@@ -140,14 +165,13 @@ const PostCard = ({ Post }) => {
             </div>
 
             <div className='post-footer flex flex-row gap-6 justify-between text-gray-500 border-t border-gray-200 pt-4'>
-                 
-                    <button
-                        className='flex items-center gap-2 cursor-pointer hover:text-red-600'
-                        onClick={onHandleLike}
-                    >
-                        <FaHeart className='h-5 w-5 text-red-500' />
-                        <span className='text-gray-800 font-bold'>{!inProcess ? likes.length : ' '}</span> Like
-                    </button>
+                <button
+                    className='flex items-center gap-2 cursor-pointer hover:text-red-600'
+                    onClick={onHandleLike}
+                >
+                    <FaHeart className='h-5 w-5 text-red-500' />
+                    <span className='text-gray-800 font-bold'>{!inProcess ? likes.length : ' '}</span> Like
+                </button>
 
                 <div className='flex items-center gap-2 cursor-pointer hover:text-blue-600'>
                     <FaComment className='h-5 w-5 text-blue-500' />
@@ -178,6 +202,7 @@ const PostCard = ({ Post }) => {
                 )}
             </div>
         </div>
+
     );
 };
 
