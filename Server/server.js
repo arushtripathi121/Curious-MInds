@@ -17,6 +17,9 @@ app.use(express.json());
 connectToDb();
 
 app.use("/Curious_Minds/api/v1/", router);
+app.use("/", () => {
+    console.log("Server Started");
+});
 
 app.listen(port, () =>{
     console.log(`the app is running on port ${port}`);

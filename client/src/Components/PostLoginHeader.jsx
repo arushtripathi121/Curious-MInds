@@ -33,7 +33,7 @@ const PostLoginHeader = () => {
     const res = data.json();
     if (res.success == true) {
       dispatch(removeUser());
-      navigate('/');
+      navigate('/signUp');
     }
   }
 
