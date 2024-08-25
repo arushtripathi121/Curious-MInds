@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
 import { IoClose } from "react-icons/io5";
+import { GrAttachment } from "react-icons/gr";
 
 const CreatePost = ({ onClose, user, userName }) => {
     const [body, setBody] = useState('');
-    console.log("userName -> ", userName);
-    
+    const [files, setFiles] = useState([]);
+
+    const handleFileChange = (event) => {
+        const fileArray = Array.from(event.target.files);
+        setFiles(prevFiles => [...prevFiles, ...fileArray]);
+    };
+
+    const handleRemoveFile = (index) => {
+        setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    };
+
     const handleChange = (e) => {
         setBody(e.target.value);
     };
 
-    const createPost = async (user, body, userName) => {
+    const createPost = async (user, body, userName, files) => {
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/createPost', {
+            const formData = new FormData();
+            formData.append('user', user);
+            formData.append('body', body);
+            formData.append('userName', userName);
+
+            // Append each file to the FormData object
+            files.forEach((file) => {
+                formData.append('file', file);
+            });
+
+            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/upload', {
                 method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ user, body, userName })
+                body: formData
             });
 
             const message = await response.json();
@@ -45,15 +62,45 @@ const CreatePost = ({ onClose, user, userName }) => {
                             className='w-full p-4 pt-6 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-[70svh] resize-none'
                         />
                     </div>
-                    <button
-                        type='submit'
-                        onClick={() => createPost(user, body, userName)}
-                        disabled={!body.trim()}
-                        className={`self-end px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out focus:outline-none ${body.trim() ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                            }`}
-                    >
-                        Post
-                    </button>
+
+                    <div className='flex items-center justify-between'>
+                        <div className='flex items-center'>
+                            <input
+                                type="file"
+                                multiple
+                                onChange={handleFileChange}
+                                className='hidden'
+                                id="fileInput"
+                            />
+                            <label htmlFor="fileInput" className='cursor-pointer text-blue-500 font-semibold flex items-center'>
+                                <GrAttachment className='w-6 h-6' />
+                                <span className='ml-2'>Attach files</span>
+                            </label>
+                            {files.length > 0 && (
+                                <ul className='ml-4 space-y-2'>
+                                    {files.map((file, index) => (
+                                        <li key={index} className='flex items-center text-black'>
+                                            <span className='mr-2'>{file.name}</span>
+                                            <button
+                                                type='button'
+                                                onClick={() => handleRemoveFile(index)}
+                                                className='text-red-500 hover:text-red-700 transition duration-300'
+                                            >
+                                                Remove
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <button
+                            onClick={() => createPost(user, body, userName, files)}
+                            disabled={!body.trim()}
+                            className={`px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out focus:outline-none ${body.trim() ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-200 cursor-not-allowed'}`}
+                        >
+                            Post
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
