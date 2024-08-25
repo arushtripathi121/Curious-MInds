@@ -23,7 +23,7 @@ const PostLoginHeader = () => {
   }
 
   const deleteAccount = async () => {
-    const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/deleteUser', {
+    const data = await fetch(api+'/deleteUser', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json"

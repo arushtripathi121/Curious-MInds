@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { api } from '../Utils/Constants';
 
 const FetchLikes = (postId) => {
     const [likes, setLikes] = useState([]);
     const fetchData = async () => {
-        const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getLikes', {
+        const data = await fetch(api+"getLikes", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -20,7 +21,7 @@ const FetchLikes = (postId) => {
 }
 
 export const checkLike = async (post, user) => {
-    const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/likePost', {
+    const data = await fetch(api+getPost, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

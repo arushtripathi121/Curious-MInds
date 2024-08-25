@@ -8,7 +8,7 @@ const CommentCard = ({ data, onClose, user }) => {
 
     const getComments = async (post) => {
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getComments', {
+            const response = await fetch(api+getComments, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -25,7 +25,7 @@ const CommentCard = ({ data, onClose, user }) => {
     const createComments = async (user, post, body) => {
         onClose();
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/commentPost', {
+            const response = await fetch(api+'commentPost', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -42,7 +42,7 @@ const CommentCard = ({ data, onClose, user }) => {
     const deleteComment = async (id) => {
         onClose();
         try {
-            const response = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/deleteComment/${id}`, {
+            const response = await fetch(api+`${id}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

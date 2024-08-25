@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
+import { api } from '../Utils/Constants';
 const GetAllPostUser = (user) => {
 
     console.log(user);
@@ -9,7 +9,7 @@ const GetAllPostUser = (user) => {
     const fetchPosts = async () => {
         console.log(user);
         
-        const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getPost', {
+        const data = await fetch(api+'getPost', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

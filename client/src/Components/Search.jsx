@@ -17,7 +17,7 @@ const Search = () => {
     }
 
     const GetSearchResults = async () => {
-        const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getUserByName', {
+        const data = await fetch(api+'getUserByName', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

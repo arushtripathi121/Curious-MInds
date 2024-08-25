@@ -1,0 +1,1 @@
+export const api = "https://server-ig01f3ppt-arushtripathi121s-projects.vercel.app/user/"

@@ -39,7 +39,7 @@ const CreatePost = ({ onClose, user, userName }) => {
                 console.log(pair[0] + ':', pair[1]); // Improved logging for debugging
             }
 
-            const response = await axios.post('http://localhost:5000/Curious_Minds/api/v1/user/createPost', formData, {
+            const response = await axios.post(api+'createPost', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

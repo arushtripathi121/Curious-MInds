@@ -7,6 +7,7 @@ import CommentCard from './CommentCard';
 import { MdDeleteOutline } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import ImageCard from './ImageCard';
+import { api } from '../Utils/Constants';
 
 const PostCard = ({ Post }) => {
     console.log(Post);
@@ -43,7 +44,7 @@ const PostCard = ({ Post }) => {
 
     const fetchLikes = async (postId) => {
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getLikes', {
+            const response = await fetch(api+'getLikes', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -59,7 +60,7 @@ const PostCard = ({ Post }) => {
 
     const deletePost = async (postId) => {
         try {
-            const response = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/deletePost/${postId}`, {
+            const response = await fetch(api+`${postId}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

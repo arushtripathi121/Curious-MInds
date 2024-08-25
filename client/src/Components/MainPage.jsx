@@ -32,7 +32,7 @@ const MainPage = () => {
     if (followData) {
       console.log('inside function -> ', followData);
       try {
-        const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getAllposts', {
+        const response = await fetch(api+'getAllposts', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

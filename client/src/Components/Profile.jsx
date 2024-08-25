@@ -21,7 +21,7 @@ const Profile = () => {
         console.log(user, userFollowed);
 
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/checkFollowStatus', {
+            const response = await fetch(api+'checkFollowStatus', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const Profile = () => {
         console.log(user, userFollowed);
 
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/follow', {
+            const response = await fetch(api+'follow', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const Profile = () => {
 
     const unFollowUser = async (followId) => {
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/unfollow', {
+            const response = await fetch(api+'unfollow', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const Profile = () => {
 
     const fetchUserData = async (userId) => {
         try {
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/getUserById', {
+            const response = await fetch(api+'getUserById', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

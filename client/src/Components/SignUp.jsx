@@ -26,7 +26,7 @@ const SignUp = () => {
     const dispatch = useDispatch();
 
     const SignUp = async (name, email, userName, password, dateOfBirth) => {
-        const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/signUp', {
+        const response = await fetch(api+'signUp', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -40,7 +40,7 @@ const SignUp = () => {
 
 
     const LogIn = async (userName, password) => {
-        const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/logIn', {
+        const response = await fetch(api+'logIn', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
