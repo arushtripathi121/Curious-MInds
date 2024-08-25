@@ -14,3 +14,24 @@ exports.connectToCloudinary = () => {
         console.log(e);
     }
 }
+
+exports.fileUploadToCloudinary = async (file, folder, type) => {
+    const options = { folder };
+    if (type === 'video') {
+        options.resource_type = type;
+    }
+  
+    // Check if file.buffer exists
+    if (!file.buffer) {
+        throw new Error('File buffer is missing');
+    }
+  
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(options, (error, result) => {
+            if (error) {
+                return reject(new Error(error.message));
+            }
+            resolve(result);
+        }).end(file.buffer);
+    });
+  };

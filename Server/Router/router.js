@@ -4,7 +4,7 @@ const router = express.Router();
 const upload = require('../Middleware/uploadMiddleware');
 
 // Import controllers
-const { signUp, logIn, getUserById, getUserByName } = require("../Controllers/userController");
+const { signUp, logIn, getUserById, getUserByName, updateUserById } = require("../Controllers/userController");
 const { createPost, deletePost, getPost, getAllPost } = require("../Controllers/postController");
 const { likePost, dislikePost, getLikes } = require("../Controllers/likeController");
 const { commentPost, deleteComment, getComments } = require("../Controllers/commentController");
@@ -14,9 +14,10 @@ const { auth, isUser, isAdmin } = require('../Middleware/auth');
 // Routes
 router.post('/test', (req, res) => res.send('Test route'));
 
-router.post('/user/signUp', signUp);
+router.post('/user/signUp', upload.single('files'), signUp);
 router.post('/user/logIn', logIn);
 router.post('/user/getUserById', getUserById);
+router.post('/user/updateUserById/:id', updateUserById);
 router.post('/user/getUserByName', getUserByName);
 router.post('/user/createPost', upload.array('files'), createPost);
 router.post('/user/deletePost/:id', deletePost);

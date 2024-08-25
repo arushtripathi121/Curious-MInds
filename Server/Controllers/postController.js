@@ -2,29 +2,7 @@ const Post = require('../Models/postModel');
 const User = require('../Models/userModel');
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
-
-// Function to upload files to Cloudinary
-const fileUploadToCloudinary = async (file, folder, type) => {
-  const options = { folder };
-  if (type === 'video') {
-      options.resource_type = type;
-  }
-
-  // Check if file.buffer exists
-  if (!file.buffer) {
-      throw new Error('File buffer is missing');
-  }
-
-  return new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(options, (error, result) => {
-          if (error) {
-              return reject(new Error(error.message));
-          }
-          resolve(result);
-      }).end(file.buffer);
-  });
-};
-
+const fileUploadToCloudinary = require("../Config/cloudinary");
 
 // Controller to create a post
 exports.createPost = async (req, res) => {

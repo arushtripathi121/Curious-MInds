@@ -2,54 +2,93 @@ const user = require('../Models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const fileUploadToCloudinary = require("../Config/cloudinary");
 
 exports.signUp = async (req, res) => {
     try {
         const { userName, name, email, password, dateOfBirth } = req.body;
         console.log(userName, name, email, password, dateOfBirth);
 
+        // Check if a user already exists with the provided email
         const findUser = await user.findOne({ email });
-
         if (findUser) {
             return res.status(400).json({
                 success: false,
-                message: 'user already exists'
-            })
+                message: 'User already exists'
+            });
         }
 
-        let hashedPassword
+        // Hash the password
+        let hashedPassword;
         try {
-            hashedPassword = await bcrypt.hash(password, 10)
-        }
-        catch (e) {
+            hashedPassword = await bcrypt.hash(password, 10);
+        } catch (e) {
             return res.status(400).json({
                 success: false,
-                message: 'password hashing failed'
-            })
+                message: 'Password hashing failed'
+            });
         }
 
+        // Handle file upload for profile photo
+        let profilePhoto = '';
+        const cloudinaryFolder = "BackEnd-tut";
+
+        if (req.file) { // Use req.file for a single file
+            const file = req.file; // Access the single file object
+
+            if (!file.buffer) {
+                throw new Error('File buffer is missing');
+            }
+
+            const fileType = path.extname(file.originalname).toLowerCase();
+            const isImage = ['.jpg', '.jpeg', '.png'].includes(fileType);
+
+            if (!isImage) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Unsupported file type. Only image files are allowed.'
+                });
+            }
+
+            try {
+                const response = await fileUploadToCloudinary(file, cloudinaryFolder, 'image');
+                profilePhoto = response.secure_url;
+                console.log('Profile photo uploaded successfully:', profilePhoto);
+            } catch (uploadError) {
+                console.error(`Error uploading file ${file.originalname}:`, uploadError.message);
+                // Continue user creation even if file upload fails
+            }
+        }
+
+        // Create the new user
         const newUser = await user.create({
-            userName, name, email, password: hashedPassword, dateOfBirth
-        })
+            userName,
+            name,
+            email,
+            password: hashedPassword,
+            dateOfBirth,
+            profilePhoto // Save the profile photo URL with the user
+        });
 
         const data = {
             userName: newUser.userName,
-            email: newUser.email
-        }
+            email: newUser.email,
+            profilePhoto: newUser.profilePhoto // Include profile photo URL in response
+        };
+
         res.status(200).json({
             success: true,
             data: data,
-            message: 'user created successfully'
-        })
-    }
-    catch (e) {
+            message: 'User created successfully'
+        });
+    } catch (e) {
         console.log(e);
         return res.status(500).json({
             success: false,
-            message: 'Something went wrong. Please try again later!!'
-        })
+            message: 'Something went wrong. Please try again later!'
+        });
     }
-}
+};
 
 exports.logIn = async (req, res) => {
     try {
@@ -143,7 +182,7 @@ exports.getUserByName = async (req, res) => {
     try {
         const { search } = req.body;
 
-        if(!search) {
+        if (!search) {
             return res.status(400).json({
                 success: false,
                 message: 'No user found'
@@ -185,3 +224,71 @@ exports.getUserByName = async (req, res) => {
     }
 
 }
+
+exports.updateUserById = async (req, res) => {
+    try {
+        const userId = req.params.id; // Get user ID from request parameters
+        const { userName, name, email, dateOfBirth } = req.body;
+        const file = req.file; // Assuming single file upload
+
+        // Validate input
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: 'User ID is required'
+            });
+        }
+
+        // Prepare update data
+        let updateData = { userName, name, email, dateOfBirth };
+
+        // Handle file upload for profile photo
+        if (file && file.buffer) {
+            const fileType = path.extname(file.originalname).toLowerCase();
+            const isImage = ['.jpg', '.jpeg', '.png'].includes(fileType);
+
+            if (!isImage) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Unsupported file type. Only image files are allowed.'
+                });
+            }
+
+            try {
+                const response = await fileUploadToCloudinary(file, 'BackEnd-tut', 'image');
+                updateData.profilePhoto = response.secure_url;
+            } catch (uploadError) {
+                console.error(`Error uploading file ${file.originalname}:`, uploadError.message);
+                // Continue update even if file upload fails
+            }
+        }
+
+        // Update user in the database
+        const updatedUser = await user.findByIdAndUpdate(userId, updateData, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        const data = {
+            userName: updatedUser.userName,
+            email: updatedUser.email,
+            profilePhoto: updatedUser.profilePhoto
+        };
+
+        res.status(200).json({
+            success: true,
+            data: data,
+            message: 'User updated successfully'
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong. Please try again later!'
+        });
+    }
+};
