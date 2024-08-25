@@ -17,8 +17,10 @@ app.use(express.json());
 connectToDb();
 
 app.use("/Curious_Minds/api/v1/", router);
-app.use("/", () => {
+
+app.get("/", (req, res) => {
     console.log("Server Started");
+    res.send("Server is running!");
 });
 
 app.listen(port, () =>{
