@@ -18,7 +18,7 @@ router.post('/user/signUp', signUp);
 router.post('/user/logIn', logIn);
 router.post('/user/getUserById', getUserById);
 router.post('/user/getUserByName', getUserByName);
-router.post('/user/createPost', upload.array('files'), createPost); // Ensure 'files' matches the FormData field name
+router.post('/user/createPost', upload.array('files'), createPost);
 router.post('/user/deletePost/:id', deletePost);
 router.post('/user/getPost', getPost);
 router.post('/user/getAllPosts', getAllPost);
