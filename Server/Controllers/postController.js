@@ -1,12 +1,9 @@
-const User = require('../Models/userModel');
+// Controllers/postController.js
 const Post = require('../Models/postModel');
-const cloudinary = require('cloudinary').v2;
-const multer = require('multer');
+const User = require('../Models/userModel');
+const cloudinary = require('cloudinary').v2; // Ensure cloudinary is configured properly
 
-// Configure multer for file handling
-const storage = multer.memoryStorage(); // Use memoryStorage to get files as Buffer
-const upload = multer({ storage });
-
+// Function to upload file to Cloudinary
 const fileUploadToCloudinary = async (file, folder, type) => {
     const options = { folder };
     if (type === 'video') {
@@ -22,10 +19,16 @@ const fileUploadToCloudinary = async (file, folder, type) => {
     });
 };
 
+// Create post function
+// Controllers/postController.js
 exports.createPost = async (req, res) => {
     try {
+        // Log incoming data for debugging
+        console.log('Incoming Body:', req.body);
+        console.log('Incoming Files:', req.files);
+
         const { user, body, userName } = req.body;
-        const files = req.files; // req.files is an array of files
+        const files = req.files;
 
         if (!files || !Array.isArray(files)) {
             return res.status(400).json({
@@ -46,6 +49,7 @@ exports.createPost = async (req, res) => {
                 throw new Error('Unsupported file type');
             }
 
+            console.log('Uploading file:', file.originalname); // Log file name
             const response = await fileUploadToCloudinary(file, cloudinaryFolder, isVideo ? 'video' : undefined);
             imageUrls.push(response.secure_url);
         }));
@@ -54,7 +58,7 @@ exports.createPost = async (req, res) => {
             user: user,
             body: body,
             userName: userName,
-            imageUrl: imageUrls // Array of image/video URLs
+            imageUrl: imageUrls
         };
 
         const newPost = await Post.create(postData);
@@ -65,15 +69,15 @@ exports.createPost = async (req, res) => {
             message: 'Posted successfully',
             data: newPost
         });
-
     } catch (e) {
-        console.log(e.message);
+        console.error(e.message); // Use console.error for logging errors
         res.status(500).json({
             success: false,
             message: e.message
         });
     }
 };
+
 
 exports.deletePost = async (req, res) => {
     try {
@@ -125,7 +129,7 @@ exports.getPost = async (req, res) => {
 };
 
 exports.getAllPost = async (req, res) => {
-    const { followData } = req.body;  // Assuming followData is an array of user IDs
+    const { followData } = req.body; // Assuming followData is an array of user IDs
     console.log('following -> ', followData);
 
     try {

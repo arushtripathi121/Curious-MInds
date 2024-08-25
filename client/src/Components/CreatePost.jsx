@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { IoClose } from "react-icons/io5";
-import { GrAttachment } from "react-icons/gr";
+import { IoClose } from 'react-icons/io5';
+import { GrAttachment } from 'react-icons/gr';
+import axios from 'axios';
 
 const CreatePost = ({ onClose, user, userName }) => {
     const [body, setBody] = useState('');
@@ -19,28 +20,41 @@ const CreatePost = ({ onClose, user, userName }) => {
         setBody(e.target.value);
     };
 
-    const createPost = async (user, body, userName, files) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('user', user);
+        formData.append('body', body);
+        formData.append('userName', userName);
+
+        // Append files to FormData
+        files.forEach(file => {
+            formData.append('files', file); // Ensure 'files' matches the field name expected by multer
+        });
+
         try {
-            const formData = new FormData();
-            formData.append('user', user);
-            formData.append('body', body);
-            formData.append('userName', userName);
+            // Log FormData for debugging
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ':', pair[1]); // Improved logging for debugging
+            }
 
-            // Append each file to the FormData object
-            files.forEach((file) => {
-                formData.append('file', file);
+            const response = await axios.post('http://localhost:5000/Curious_Minds/api/v1/user/createPost', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
             });
 
-            const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            const message = await response.json();
-            console.log(message);
-            onClose();
+            if (response.data.success) {
+                // Handle success (e.g., close modal, show message)
+                onClose();
+            } else {
+                // Handle error
+                console.error('Error creating post:', response.data.message);
+            }
         } catch (error) {
-            console.error('Error:', error);
+            // Handle errors (e.g., network issues)
+            console.error('Error:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -53,12 +67,13 @@ const CreatePost = ({ onClose, user, userName }) => {
                 >
                     <IoClose />
                 </button>
-                <form onSubmit={(e) => e.preventDefault()} className='flex flex-col space-y-4 mt-5'>
+                <form onSubmit={handleSubmit} className='flex flex-col space-y-4 mt-5'>
                     <div className='relative'>
                         <textarea
                             id='thoughts'
                             placeholder='Write your thoughts...'
                             onChange={handleChange}
+                            value={body}
                             className='w-full p-4 pt-6 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-[70svh] resize-none'
                         />
                     </div>
@@ -94,7 +109,7 @@ const CreatePost = ({ onClose, user, userName }) => {
                             )}
                         </div>
                         <button
-                            onClick={() => createPost(user, body, userName, files)}
+                            type='submit'
                             disabled={!body.trim()}
                             className={`px-6 py-3 rounded-lg shadow transition duration-300 ease-in-out focus:outline-none ${body.trim() ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-200 cursor-not-allowed'}`}
                         >
@@ -107,13 +122,4 @@ const CreatePost = ({ onClose, user, userName }) => {
     );
 };
 
-const PostDisplay = ({ post }) => {
-    return (
-        <div className='p-6 bg-gray-100 border border-gray-300 rounded-lg'>
-            <pre className='whitespace-pre-wrap break-words'>{post.body}</pre>
-        </div>
-    );
-};
-
 export default CreatePost;
-export { PostDisplay };
