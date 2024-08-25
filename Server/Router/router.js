@@ -14,7 +14,7 @@ const { auth, isUser, isAdmin } = require('../Middleware/auth');
 // Routes
 router.post('/test', (req, res) => res.send('Test route'));
 
-router.post('/user/signUp', upload.single('files'), signUp);
+router.post('/user/signUp', signUp);
 router.post('/user/logIn', logIn);
 router.post('/user/deleteUser', deleteUser);
 router.post('/user/getUserById', getUserById);

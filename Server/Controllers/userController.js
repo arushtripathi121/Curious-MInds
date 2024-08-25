@@ -33,37 +33,6 @@ exports.signUp = async (req, res) => {
             });
         }
 
-        // Handle file upload for profile photo
-        let profilePhoto = '';
-        const cloudinaryFolder = "BackEnd-tut";
-
-        if (req.file) { // Use req.file for a single file
-            const file = req.file; // Access the single file object
-
-            if (!file.buffer) {
-                throw new Error('File buffer is missing');
-            }
-
-            const fileType = path.extname(file.originalname).toLowerCase();
-            const isImage = ['.jpg', '.jpeg', '.png'].includes(fileType);
-
-            if (!isImage) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Unsupported file type. Only image files are allowed.'
-                });
-            }
-
-            try {
-                const response = await fileUploadToCloudinary(file, cloudinaryFolder, 'image');
-                profilePhoto = response.secure_url;
-                console.log('Profile photo uploaded successfully:', profilePhoto);
-            } catch (uploadError) {
-                console.error(`Error uploading file ${file.originalname}:`, uploadError.message);
-                // Continue user creation even if file upload fails
-            }
-        }
-
         // Create the new user
         const newUser = await user.create({
             userName,
@@ -71,13 +40,11 @@ exports.signUp = async (req, res) => {
             email,
             password: hashedPassword,
             dateOfBirth,
-            profilePhoto // Save the profile photo URL with the user
         });
 
         const data = {
             userName: newUser.userName,
             email: newUser.email,
-            profilePhoto: newUser.profilePhoto // Include profile photo URL in response
         };
 
         res.status(200).json({
