@@ -40,7 +40,7 @@ const SignUp = () => {
 
 
     const LogIn = async (userName, password) => {
-        const response = await fetch(api+'logIn', {
+        const response = await fetch(api+"logIn", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
