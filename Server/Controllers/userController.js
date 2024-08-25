@@ -1,4 +1,8 @@
 const user = require('../Models/userModel');
+const post = require('../Models/postModel');
+const like = require('../Models/likeModel');
+const comments = require('../Models/commentModel');
+const follower = require('../Models/followerModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -289,6 +293,31 @@ exports.updateUserById = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: 'Something went wrong. Please try again later!'
+        });
+    }
+};
+
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const id = req.body.id; // Make sure to extract ID from the request body correctly
+        console.log(id);
+
+        await post.deleteMany({ user: id });
+        await like.deleteMany({ user: id });
+        await comments.deleteMany({ user: id });
+        await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] }); // Use $or for multiple conditions
+        await user.deleteOne({ id }); // Assuming the ID is stored in _id field
+
+        res.status(200).json({
+            success: true,
+            message: "Account deleted"
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong"
         });
     }
 };

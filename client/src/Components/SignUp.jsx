@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
-import Header from './Header';
+import React, { useEffect, useRef, useState } from 'react'
+import Header from './Header'
 import { validate } from '../Utils/validate';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../Utils/userSlice';
 
 const SignUp = () => {
+
     const [sign, setSign] = useState(true);
     const [message, setMessage] = useState('');
     const [login, setLogin] = useState(false);
@@ -15,35 +16,28 @@ const SignUp = () => {
     const name = useRef(null);
     const userName = useRef(null);
     const confirmPassword = useRef(null);
-    const profilePhoto = useRef(null); // Ref for the profile photo input
+    const user = useSelector((store) => store.user)
+    const handleSign = () => {
+        setSign(!sign);
+    }
 
-    const user = useSelector((store) => store.user);
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const handleSign = () => {
-        setSign(!sign);
-    };
-
-    const SignUp = async (name, email, userName, password, dateOfBirth, profilePhoto) => {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('email', email);
-        formData.append('userName', userName);
-        formData.append('password', password);
-        formData.append('dateOfBirth', dateOfBirth);
-        if (profilePhoto) {
-            formData.append('profilePhoto', profilePhoto);
-        }
-
+    const SignUp = async (name, email, userName, password, dateOfBirth) => {
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/signUp', {
             method: 'POST',
-            body: formData
-        });
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, userName, password, dateOfBirth })
+        })
 
         const data = await response.json();
         return data;
-    };
+    }
+
 
     const LogIn = async (userName, password) => {
         const response = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/logIn', {
@@ -52,50 +46,61 @@ const SignUp = () => {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({ userName, password })
-        });
+        })
 
         const data = await response.json();
         return data;
-    };
+    }
+
 
     const handleOnLogin = async (value) => {
-        if (user) {
+        console.log('Function called');
+        console.log(value);
+        if(user) {
             navigate('/main');
         }
         if (!value) {
             try {
-                const message = validate(email.current.value, password.current.value, confirmPassword.current.value, dob.current.value);
+
+                const message = validate(email.current.value, password.current.value, confirmPassword.current.value, dob.current.value,);
                 if (message) {
                     setMessage(message);
                 }
 
                 if (!message) {
-                    const data = await SignUp(name.current.value, email.current.value, userName.current.value, password.current.value, dob.current.value, profilePhoto.current.files[0]);
-                    if (!data.success) {
+                    const data = await SignUp(name.current.value, email.current.value, userName.current.value, password.current.value, dob.current.value);
+                    if (data.success == false) {
                         setMessage(data.message);
-                    } else {
-                        navigate('/redirectToSignIn');
+                    }
+                    else {
+                        navigate('/redirectToSignIn')
                     }
                 }
-            } catch (e) {
-                console.log(e);
             }
-        } else if (value) {
-            try {
-                const data = await LogIn(userName.current.value, password.current.value);
-                if (data.success) {
-                    dispatch(addUser(data));
-                    setLogin(true);
-                    navigate('/main');
-                } else {
-                    setMessage(data.message);
-                }
-            } catch (e) {
+
+            catch (e) {
                 console.log(e);
             }
         }
-    };
 
+        else if(value){ 
+            try{
+                const data = await LogIn(userName.current.value, password.current.value);
+                console.log(data);
+                if (data.success == true) {
+                    dispatch(addUser(data));
+                    setLogin(true);
+                    navigate('/main')
+                }
+                else {
+                    setMessage(data.message);
+                }
+        }
+        catch(e){
+            console.log(e);
+        }
+    }
+    }
     return (
         <div>
             <Header />
@@ -103,22 +108,6 @@ const SignUp = () => {
                 <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
                     <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">{sign ? "Sign In" : "Sign Up"}</h2>
                     <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
-                        {/* Profile Photo Upload */}
-                        {!sign && (
-                            <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-700 mb-2 px-2">
-                                    Upload Profile Photo (Image only)
-                                </label>
-                                <input
-                                    type="file"
-                                    accept=".jpg,.jpeg,.png"
-                                    className="px-4 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-purple-600"
-                                    ref={profilePhoto}
-                                />
-                            </div>
-                        )}
-
-                        {/* Other Inputs */}
                         {!sign && <input
                             type="text"
                             placeholder="Enter email"
@@ -131,6 +120,8 @@ const SignUp = () => {
                             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                             ref={name}
                         />}
+
+
                         {!sign && (
                             <div className="mb-4">
                                 <label className="block text-sm font-medium text-gray-700 mb-2 px-2">
@@ -178,7 +169,7 @@ const SignUp = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default SignUp;
+export default SignUp

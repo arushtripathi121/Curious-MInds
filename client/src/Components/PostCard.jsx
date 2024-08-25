@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import ImageCard from './ImageCard';
 
 const PostCard = ({ Post }) => {
+    console.log(Post);
+    
     const User = useSelector((store) => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
@@ -189,7 +191,7 @@ const PostCard = ({ Post }) => {
                     {new Date(Post.date).toLocaleDateString()}
                 </div>
 
-                {User.User._id === Post.user && (
+                {User.User._id === Post.user._id && (
                     <button
                         className='relative text-red-600 hover:text-red-800 focus:outline-none'
                         onClick={() => deletePost(Post._id)}

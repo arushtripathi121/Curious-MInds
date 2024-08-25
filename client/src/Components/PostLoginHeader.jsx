@@ -1,13 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaPlus, FaRegUser } from "react-icons/fa";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { removeUser } from '../Utils/userSlice';
 import Search from './Search';
+import { MdDelete } from "react-icons/md";
 
 const PostLoginHeader = () => {
 
   const [show, setShow] = useState(false);
+  const UserData = useSelector((store) => store.user.user);
+  const { id } = UserData.User._id;
   const onHandleClick = () => {
     setShow(!show);
   }
@@ -17,6 +20,21 @@ const PostLoginHeader = () => {
   const onLogout = () => {
     dispatch(removeUser());
     navigate('/');
+  }
+
+  const deleteAccount = async () => {
+    const data = await fetch('http://localhost:5000/Curious_Minds/api/v1/user/deleteUser', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    })
+    const res = data.json();
+    if (res.success == true) {
+      dispatch(removeUser());
+      navigate('/');
+    }
   }
 
   return (
@@ -43,6 +61,13 @@ const PostLoginHeader = () => {
             onClick={onLogout}
           >
             Log out
+          </p>
+
+          <p
+            className="px-4 py-2 hover:bg-blue-200 cursor-pointer flex flex-row items-center"
+            onClick={deleteAccount}
+          >
+            <MdDelete className='text-red-500 w-5 h-6' /> Delete Account 
           </p>
         </div>
       </div>
