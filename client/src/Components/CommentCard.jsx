@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdDeleteOutline } from "react-icons/md";
-
+import { api } from '../Utils/Constants';
 const CommentCard = ({ data, onClose, user }) => {
     const post = data;
     const [comments, setComments] = useState([]);

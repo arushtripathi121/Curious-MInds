@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaCross, FaCrosshairs } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
-
+import { api } from '../Utils/Constants';
 const Search = () => {
     const [search, setSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);

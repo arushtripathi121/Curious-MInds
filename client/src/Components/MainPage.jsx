@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import FetchUser from '../Hooks/FetchUser';
 import CreatePost from './CreatePost';
 import { MdOutlineAddComment } from 'react-icons/md';
-
+import { api } from '../Utils/Constants';
 const MainPage = () => {
 
   const UserData = useSelector((store) => store.user.user);

@@ -6,6 +6,7 @@ import { MdOutlineAddComment } from 'react-icons/md';
 import CreatePost from './CreatePost';
 import { useParams } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
+import { api } from '../Utils/Constants';
 
 const Profile = () => {
     const { id } = useParams();

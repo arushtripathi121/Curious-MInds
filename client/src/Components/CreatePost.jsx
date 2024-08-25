@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { GrAttachment } from 'react-icons/gr';
 import axios from 'axios';
-
+import { api } from '../Utils/Constants';
 const CreatePost = ({ onClose, user, userName }) => {
     const [body, setBody] = useState('');
     const [files, setFiles] = useState([]);

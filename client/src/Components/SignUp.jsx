@@ -4,7 +4,7 @@ import { validate } from '../Utils/validate';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../Utils/userSlice';
-
+import { api } from '../Utils/Constants';
 const SignUp = () => {
 
     const [sign, setSign] = useState(true);
