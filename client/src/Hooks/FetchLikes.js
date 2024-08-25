@@ -21,7 +21,7 @@ const FetchLikes = (postId) => {
 }
 
 export const checkLike = async (post, user) => {
-    const data = await fetch(api+getPost, {
+    const data = await fetch(api+'getPost', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -33,7 +33,7 @@ export const checkLike = async (post, user) => {
 }
 
 export const checkDislike = async (id) => {
-    const data = await fetch(`http://localhost:5000/Curious_Minds/api/v1/user/dislikePost/${id}`, {
+    const data = await fetch(api+`${id}`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
