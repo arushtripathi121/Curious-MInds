@@ -1,1 +1,1 @@
-export const api = "https://server-ig01f3ppt-arushtripathi121s-projects.vercel.app//Curious_Minds/api/v1/user/";
+export const api = "https://server-ig01f3ppt-arushtripathi121s-projects.vercel.app/Curious_Minds/api/v1/user/";
