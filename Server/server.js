@@ -10,7 +10,12 @@ const port = process.env.port;
 const cloudinary = require('./Config/cloudinary');
 cloudinary.connectToCloudinary();
 
-app.use(cors());
+const corsOptions = {
+    origin: process.env.frontendurl, // Replace with your frontend URL
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
