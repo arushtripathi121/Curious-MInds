@@ -1,14 +1,3 @@
-// import { configureStore } from '@reduxjs/toolkit';
-// import userReducer from './userSlice';
-// const appStore = configureStore({
-
-//     reducer: {
-//         user: userReducer,
-//     }
-// })
-
-// export default appStore;
-
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import userReducer from './userSlice';
 import storage from 'redux-persist/lib/storage';
