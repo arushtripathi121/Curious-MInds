@@ -122,10 +122,10 @@ exports.logIn = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
     try {
-        const { userId } = req.body;
-        console.log(userId);
+        const { id } = req.body;
+        console.log(id);
 
-        const userData = await user.findById({ _id: userId });
+        const userData = await user.findById({ _id: id });
         
         if (!userData) {
             res.status(400).json(
