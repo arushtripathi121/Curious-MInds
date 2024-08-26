@@ -13,11 +13,12 @@ cloudinary.connectToCloudinary();
 // Enable CORS and configure it for your frontend URL
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'https://client-sigma-drab.vercel.app', // Replace with your actual frontend URL
+    origin: '*', // Allows requests from any origin
     methods: 'GET,POST,PUT,DELETE,OPTIONS', // Allowed HTTP methods
     credentials: true, // Include credentials if needed
   })
 );
+
 
 // Body parser middleware to handle JSON requests
 app.use(express.json());
