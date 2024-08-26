@@ -5,13 +5,13 @@ const { connectToDb } = require('./Config/databse');
 require('dotenv').config();
 const router = require('./Router/router');
 
-const port = process.env.PORT || 3000; // Default to 3000 if PORT is not defined
+const port = process.env.PORT || 3000;
 
 const cloudinary = require('./Config/cloudinary');
 cloudinary.connectToCloudinary();
 
 const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Use uppercase for environment variable names
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200
