@@ -6,6 +6,7 @@ const follower = require('../Models/followerModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const mongoose = require('mongoose');
 const fileUploadToCloudinary = require("../Config/cloudinary");
 
 exports.signUp = async (req, res) => {
@@ -123,8 +124,8 @@ exports.logIn = async (req, res) => {
 exports.getUserById = async (req, res) => {
     try {
         const { userId } = req.body;
-        const userData = await user.findById({ _id: userId});
-        
+        const userData = await user.findById({ _id: userId });
+
         if (!userData) {
             res.status(400).json(
                 {
@@ -278,23 +279,35 @@ exports.deleteUser = async (req, res) => {
             });
         }
 
+        // Remove posts, likes, comments related to the user
         await post.deleteMany({ user: id });
         await like.deleteMany({ user: id });
         await comments.deleteMany({ user: id });
-        await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] });
 
-        // Delete user by _id field
-        await user.deleteOne({ _id: id });
+        // Remove the user from the followers and following lists of other users
+        await user.updateMany(
+            { following: id },
+            { $pull: { following: id } }
+        );
+
+        await user.updateMany(
+            { followers: id },
+            { $pull: { followers: id } }
+        );
+
+        // Delete the user
+        await user.findByIdAndDelete(id);
 
         res.status(200).json({
             success: true,
             message: "Account deleted"
         });
     } catch (e) {
-        console.error(e);
+        console.error("Error details:", e);
         res.status(500).json({
             success: false,
-            message: "Something went wrong"
+            message: "Something went wrong",
+            error: e.message  // Add this line to see the error message in the response
         });
     }
 };

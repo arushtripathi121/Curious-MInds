@@ -57,7 +57,7 @@ const Search = () => {
             {searchResults && searchResults.length > 0 && isMenuOpen &&  (
                 <div className="absolute top-14 p-4 bg-white border border-gray-300 rounded-lg shadow-md w-[72svh] mt-2">
                     {searchResults.map(user => (
-                        <p key={user._id} className="text-lg text-gray-800 mb-2 cursor-pointer border border-b-gray-900 py-2"><Link to={`/profile/${user.id}`}>{user.name}</Link></p>
+                        <Link to={`/profile/${user.id}`}><p key={user._id} className="text-lg text-gray-800 mb-2 cursor-pointer border border-b-gray-900 py-2">{user.name}</p></Link>
                     ))}
                 </div>
             )}
