@@ -13,16 +13,16 @@ cloudinary.connectToCloudinary();
 const corsOptions = {
     origin: process.env.frontendurl,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
-
 app.use(express.json());
 
 connectToDb();
 
-app.use("/Curious_Minds/api/v1/", corsOptions ,router);
+app.use("/Curious_Minds/api/v1/", router);
 
 app.get("/", (req, res) => {
     console.log("Server Started");
@@ -30,5 +30,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`the app is running on port ${port}`);
-})
+    console.log(`The app is running on port ${port}`);
+});
