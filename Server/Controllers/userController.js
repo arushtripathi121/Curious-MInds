@@ -122,10 +122,8 @@ exports.logIn = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
     try {
-        const { id } = req.body;
-        console.log(id);
-
-        const userData = await user.findById({ _id: id });
+        const { userId } = req.body;
+        const userData = await user.findById({ _id: userId});
         
         if (!userData) {
             res.status(400).json(
@@ -270,21 +268,12 @@ exports.updateUserById = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const id = req.body.id; // Make sure to extract ID from the request body correctly
-        console.log(id);
-        if(id) {
+        const id = req.body;
         await post.deleteMany({ user: id });
         await like.deleteMany({ user: id });
         await comments.deleteMany({ user: id });
         await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] }); // Use $or for multiple conditions
         await user.deleteOne({ id }); // Assuming the ID is stored in _id field
-        }
-        else{
-            res.status(500).json({
-                success: false,
-                message: "Id not found"
-            });
-        }
 
         res.status(200).json({
             success: true,
