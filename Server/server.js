@@ -11,15 +11,21 @@ cloudinary.connectToCloudinary();
 
 // Move CORS middleware to the top
 app.use((req, res, next) => {
-  const allowedOrigins = 'https://client-sigma-drab.vercel.app/';  // Replace with your client origin
+  const allowedOrigins = ['https://client-sigma-drab.vercel.app']; // Corrected URL without trailing slash
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  return next();
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  next();
 });
 
 app.use(express.json());
