@@ -7,87 +7,79 @@ const path = require('path');
 fileUploadToCloudinary = async (file, folder, type) => {
   const options = { folder };
   if (type === 'video') {
-      options.resource_type = type;
+    options.resource_type = type;
   }
 
   // Check if file.buffer exists
   if (!file.buffer) {
-      throw new Error('File buffer is missing');
+    throw new Error('File buffer is missing');
   }
 
   return new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(options, (error, result) => {
-          if (error) {
-              return reject(new Error(error.message));
-          }
-          resolve(result);
-      }).end(file.buffer);
+    cloudinary.uploader.upload_stream(options, (error, result) => {
+      if (error) {
+        return reject(new Error(error.message));
+      }
+      resolve(result);
+    }).end(file.buffer);
   });
 };
 
 // Controller to create a post
 exports.createPost = async (req, res) => {
   try {
-      const { user, body, userName } = req.body;
-      let files = req.files;
+    const { user, body, userName } = req.body;
+    const files = req.files || [];
 
-      if (!files || files.length === 0) {
-          return res.status(400).json({
-              success: false,
-              message: 'No files uploaded'
-          });
-      }
+    let imageUrls = [];
+    const cloudinaryFolder = "BackEnd-tut";
 
-      console.log(files);
-      
-      let imageUrls = [];
-      const cloudinaryFolder = "BackEnd-tut";
-
+    if (files.length > 0) {
+      // Process files if present
       await Promise.all(files.map(async (file) => {
-          if (!file.buffer) {
-              throw new Error('File buffer is missing');
-          }
+        if (!file.buffer) {
+          throw new Error('File buffer is missing');
+        }
 
-          const fileType = path.extname(file.originalname).toLowerCase();
-          const isImage = ['.jpg', '.jpeg', '.png'].includes(fileType);
-          const isVideo = ['.mp4'].includes(fileType);
+        const fileType = path.extname(file.originalname).toLowerCase();
+        const isImage = ['.jpg', '.jpeg', '.png'].includes(fileType);
+        const isVideo = ['.mp4'].includes(fileType);
 
-          if (!isImage && !isVideo) {
-              throw new Error('Unsupported file type');
-          }
+        if (!isImage && !isVideo) {
+          throw new Error('Unsupported file type');
+        }
 
-          try {
-              const response = await fileUploadToCloudinary(file, cloudinaryFolder, isVideo ? 'video' : 'image');
-              imageUrls.push(response.secure_url);
-          } catch (uploadError) {
-              console.error(`Error uploading file ${file.originalname}:`, uploadError.message);
-          }
+        try {
+          const response = await fileUploadToCloudinary(file, cloudinaryFolder, isVideo ? 'video' : 'image');
+          imageUrls.push(response.secure_url);
+        } catch (uploadError) {
+          console.error(`Error uploading file ${file.originalname}:`, uploadError.message);
+        }
       }));
+    }
 
-      const postData = {
-          user: user,
-          body: body,
-          userName: userName,
-          imageUrl: imageUrls
-      };
+    const postData = {
+      user: user,
+      body: body,
+      userName: userName,
+      imageUrl: imageUrls
+    };
 
-      const newPost = await Post.create(postData);
-      await User.findByIdAndUpdate(user, { $push: { posts: newPost._id } }, { new: true }).populate('posts').exec();
+    const newPost = await Post.create(postData);
+    await User.findByIdAndUpdate(user, { $push: { posts: newPost._id } }, { new: true }).populate('posts').exec();
 
-      res.status(200).json({
-          success: true,
-          message: 'Posted successfully',
-      });
+    res.status(200).json({
+      success: true,
+      message: 'Posted successfully',
+    });
   } catch (e) {
-      console.error('Error creating post:', e.message);
-      res.status(500).json({
-          success: false,
-          message: e.message
-      });
+    console.error('Error creating post:', e.message);
+    res.status(500).json({
+      success: false,
+      message: e.message
+    });
   }
 };
-
-
 
 exports.deletePost = async (req, res) => {
   try {

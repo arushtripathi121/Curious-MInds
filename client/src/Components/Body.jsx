@@ -20,7 +20,7 @@ const Body = () => {
           element: <SignUp/>
         },
         {
-          path: 'redirectToSignIn',
+          path: '/redirectToSignIn',
           element: <Redirecting/>
         },
         {

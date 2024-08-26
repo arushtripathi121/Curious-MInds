@@ -16,14 +16,12 @@ const FetchUser = (userId) => {
         })
         const res = await data.json();
         setData(res.user.following);
-        console.log(res);
-        
     }
 
     useEffect(() => {
         fetchData(userId);
     }, [1])
-
+    data.push(userId);
     return data;
 }
 

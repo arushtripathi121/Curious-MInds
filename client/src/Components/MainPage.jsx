@@ -28,6 +28,7 @@ const MainPage = () => {
   };
 
   const GetAllPost = async (followData) => {
+  
     console.log("followData -> ", followData);
     if (followData) {
       console.log('inside function -> ', followData);

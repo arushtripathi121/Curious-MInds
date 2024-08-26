@@ -37,18 +37,18 @@ router.post('/user/follow', follow);
 router.post('/user/unfollow', unfollow);
 router.post('/user/checkFollowStatus', checkFollowStatus);
 
-router.get('/user', auth, isUser, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Welcome to the protected route for users'
-  });
-});
+// router.get('/user', auth, isUser, (req, res) => {
+//   res.json({
+//     success: true,
+//     message: 'Welcome to the protected route for users'
+//   });
+// });
 
-router.get('/admin', auth, isAdmin, (req, res) => {
-  res.json({
-    success: true,
-    message: 'Welcome to the protected route for Admin'
-  });
-});
+// router.get('/admin', auth, isAdmin, (req, res) => {
+//   res.json({
+//     success: true,
+//     message: 'Welcome to the protected route for Admin'
+//   });
+// });
 
 module.exports = router;

@@ -26,7 +26,7 @@ const SignUp = () => {
     const dispatch = useDispatch();
 
     const SignUp = async (name, email, userName, password, dateOfBirth) => {
-        const response = await fetch(api + 'signUp', {
+        const response = await fetch(api+'signUp', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -40,32 +40,23 @@ const SignUp = () => {
 
 
     const LogIn = async (userName, password) => {
-        try {
-            const response = await fetch(api + "logIn", {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ userName, password }),
-            });
+        const response = await fetch(api+"logIn", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ userName, password })
+        })
 
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Error during LogIn:', error);
-            setMessage('An error occurred during Log In');
-        }
-    };
+        const data = await response.json();
+        return data;
+    }
 
 
     const handleOnLogin = async (value) => {
         console.log('Function called');
         console.log(value);
-        if (user) {
+        if(user) {
             navigate('/main');
         }
         if (!value) {
@@ -92,8 +83,8 @@ const SignUp = () => {
             }
         }
 
-        else if (value) {
-            try {
+        else if(value){ 
+            try{
                 const data = await LogIn(userName.current.value, password.current.value);
                 console.log(data);
                 if (data.success == true) {
@@ -104,11 +95,11 @@ const SignUp = () => {
                 else {
                     setMessage(data.message);
                 }
-            }
-            catch (e) {
-                console.log(e);
-            }
         }
+        catch(e){
+            console.log(e);
+        }
+    }
     }
     return (
         <div>

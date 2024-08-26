@@ -70,7 +70,10 @@ exports.logIn = async (req, res) => {
         if (!User) {
             return res.status(400).json({
                 success: 'false',
-                message: 'Some thing went wrong'
+                message: 'no user found',
+                data: {
+                    userName, password, email
+                }
             })
         }
 
@@ -123,7 +126,7 @@ exports.getUserById = async (req, res) => {
         console.log(userId);
 
         const userData = await user.findById({ _id: userId });
-
+        
         if (!userData) {
             res.status(400).json(
                 {
@@ -269,12 +272,19 @@ exports.deleteUser = async (req, res) => {
     try {
         const id = req.body.id; // Make sure to extract ID from the request body correctly
         console.log(id);
-
+        if(id) {
         await post.deleteMany({ user: id });
         await like.deleteMany({ user: id });
         await comments.deleteMany({ user: id });
         await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] }); // Use $or for multiple conditions
         await user.deleteOne({ id }); // Assuming the ID is stored in _id field
+        }
+        else{
+            res.status(500).json({
+                success: false,
+                message: "Id not found"
+            });
+        }
 
         res.status(200).json({
             success: true,
