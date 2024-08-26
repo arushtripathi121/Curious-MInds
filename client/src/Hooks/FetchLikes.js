@@ -21,7 +21,7 @@ const FetchLikes = (postId) => {
 }
 
 export const checkLike = async (post, user) => {
-    const data = await fetch(api+'getPost', {
+    const data = await fetch(api+'likePost', {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -33,7 +33,7 @@ export const checkLike = async (post, user) => {
 }
 
 export const checkDislike = async (id) => {
-    const data = await fetch(api+`${id}`, {
+    const data = await fetch(api+'dislikePost/'+`${id}`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"

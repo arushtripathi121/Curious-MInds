@@ -11,7 +11,7 @@ import { api } from '../Utils/Constants';
 
 const PostCard = ({ Post }) => {
     console.log(Post);
-    
+
     const User = useSelector((store) => store.user.user);
     const [likeCard, showLikeCard] = useState(false);
     const [likes, setLikes] = useState([]);
@@ -44,7 +44,7 @@ const PostCard = ({ Post }) => {
 
     const fetchLikes = async (postId) => {
         try {
-            const response = await fetch(api+'getLikes', {
+            const response = await fetch(api + 'getLikes', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -60,7 +60,7 @@ const PostCard = ({ Post }) => {
 
     const deletePost = async (postId) => {
         try {
-            const response = await fetch(api+"deletePost/"+`${postId}`, {
+            const response = await fetch(api + "deletePost/" + `${postId}`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
@@ -138,7 +138,11 @@ const PostCard = ({ Post }) => {
             </div>
             <div className="grid grid-flow-col gap-1">
                 {Post.imageUrl.slice(0, 2).map((image, index) => (
-                    <div key={index} className="w-full h-full border border-black rounded-lg" onClick={onHandleImageCard}>
+                    <div
+                        key={index}
+                        className="w-full h-48 border border-black rounded-lg cursor-pointer" // Adjust h-48 to your desired fixed height
+                        onClick={onHandleImageCard}
+                    >
                         <img
                             src={image}
                             alt={`Image ${index}`}

@@ -125,7 +125,8 @@ exports.getPost = async (req, res) => {
     console.log(e);
     return res.status(400).json({
       success: false,
-      message: 'Something went wrong'
+      message: 'Something went wrong',
+      error: e
     });
   }
 };

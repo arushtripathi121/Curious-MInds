@@ -8,7 +8,7 @@ const CommentCard = ({ data, onClose, user }) => {
 
     const getComments = async (post) => {
         try {
-            const response = await fetch(api+getComments, {
+            const response = await fetch(api+'getComments', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"
