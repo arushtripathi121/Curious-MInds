@@ -268,19 +268,30 @@ exports.updateUserById = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const id = req.body;
+        const { id } = req.body;
+
+        // Ensure the id is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid user ID"
+            });
+        }
+
         await post.deleteMany({ user: id });
         await like.deleteMany({ user: id });
         await comments.deleteMany({ user: id });
-        await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] }); // Use $or for multiple conditions
-        await user.deleteOne({ id }); // Assuming the ID is stored in _id field
+        await follower.deleteMany({ $or: [{ user: id }, { userFollowed: id }] });
+
+        // Delete user by _id field
+        await user.deleteOne({ _id: id });
 
         res.status(200).json({
             success: true,
             message: "Account deleted"
         });
     } catch (e) {
-        console.log(e);
+        console.error(e);
         res.status(500).json({
             success: false,
             message: "Something went wrong"

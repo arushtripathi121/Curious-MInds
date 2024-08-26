@@ -13,8 +13,8 @@ const PostLoginHeader = () => {
   const [usernameInput, setUsernameInput] = useState('');
 
   const UserData = useSelector((store) => store.user.user);
-  const { id, userName } = UserData.User; // Assuming userName is available in UserData.User
-
+  const { _id, userName } = UserData.User; // Assuming userName is available in UserData.User
+  const id = _id;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
